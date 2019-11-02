@@ -33,10 +33,6 @@
 #define RX 10
 #define TX 11
 
-// implement a notification class,
-// its member methods will get called 
-//
-
 uint8_t playIndex = 0;
 bool isSwitching = false;
 
@@ -45,9 +41,33 @@ class Mp3Notify;
 class Player {
  public:
 	static DFMiniMp3<SoftwareSerial, Mp3Notify> mp3;
-	
-	static void test() {
-		Serial.println("Test Player");
+
+	static void setup() {
+		Serial.begin(115200);
+
+		Serial.println("initializing...");
+
+		delay(5000); // It was suggested to have a 5 second delay before starting
+		mp3.begin();
+		delay(30);
+
+		uint16_t volume = mp3.getVolume();
+		Serial.print("volume ");
+		Serial.println(volume);
+		mp3.setVolume(24);
+		delay(30);
+  
+		uint16_t count = mp3.getTotalTrackCount();
+		Serial.print("files ");
+		Serial.println(count);
+
+		Serial.println("starting...");
+
+		Player::playNextTrack();
+	}
+
+	static void loop() {
+		mp3.loop();
 	}
 
 	static void playNextTrack() {
@@ -78,16 +98,9 @@ class Player {
 	}
 };
 
-class Registry {
- public:
-	static Player player;
-};
-
 class Mp3Notify
 {
 public:
-	static Player player;
-	
   static void OnError(uint16_t errorCode)
   {
     // see DfMp3_Error for code meaning
@@ -148,60 +161,8 @@ public:
   }
 };
 
-// instance a DFMiniMp3 object, 
-// defined with the above notification class and the hardware serial class
-//
-//DFMiniMp3<HardwareSerial, Mp3Notify> mp3(Serial1);
-
-// Some arduino boards only have one hardware serial port, so a software serial port is needed instead.
-// comment out the above definition and uncomment these lines
 SoftwareSerial secondarySerial(RX, TX); // RX, TX
 DFMiniMp3<SoftwareSerial, Mp3Notify> Player::mp3(secondarySerial);
 
-void setup() 
-{
-  Serial.begin(115200);
-
-  Serial.println("initializing...");
-
-	delay(5000); // It was suggested to have a 5 second delay before starting
-  Player::mp3.begin();
-	delay(30);
-
-  uint16_t volume = Player::mp3.getVolume();
-  Serial.print("volume ");
-  Serial.println(volume);
-  Player::mp3.setVolume(24);
-	delay(30);
-  
-  uint16_t count = Player::mp3.getTotalTrackCount();
-  Serial.print("files ");
-  Serial.println(count);
-
-  Serial.println("starting...");
-
-	Player::playNextTrack();
-}
-
-void loop() 
-{
-	/* waitMilliseconds(5000); */
-  /* Player::mp3.nextTrack(); */
-	
-	Player::mp3.loop();
-	
-	/* Serial.println("track 1");  */
-  /* Player::mp3.playFolderTrack(1, 1);  // sd:/01/001.mp3 */
-  
-  /* waitMilliseconds(5000); */
-  
-  /* Serial.println("track 2");  */
-  /* Player::mp3.playFolderTrack(1, 2); // sd:/01/002.mp3 */
-  
-  /* waitMilliseconds(5000); */
-  
-  /* Serial.println("track 3"); */
-  /* Player::mp3.playFolderTrack(1, 3); // sd:/01/003.mp3 */
-  
-  /* waitMilliseconds(5000); */
-}
+void setup() { Player::setup(); }
+void loop() { Player::loop(); }
