@@ -8,21 +8,38 @@
 // sd:/mp3/0002.mp3
 // sd:/mp3/0003.mp3
 
+/* DfMp3_Error_Busy = 1 - (see chip documentation) Usually the media was not found. */
+/* DfMp3_Error_Sleeping = 2 - (see chip documentation) The chip is in sleep mode. */
+/* DfMp3_Error_SerialWrongStack = 3 - (see chip documentation) */
+/* DfMp3_Error_CheckSumNotMatch = 4 - (see chip documentation) Communications error on the hardware level. Check wiring and GND connections. */
+/* DfMp3_Error_FileIndexOut = 5 - (see chip documentation) File index out of bounds. */
+/* DfMp3_Error_FileMismatch = 6 - (see chip documentation) Can not find file. */
+/* DfMp3_Error_Advertise = 7 - (see chip documentation) In advertisement. */
+/* DfMp3_Error_RxTimeout = 129 - An expected response from the device timed out while waiting. Check wiring. */
+/* DfMp3_Error_PacketSize = 130 - The packet received from the device is the incorrect size. */
+/* DfMp3_Error_PacketHeader = 131 - The packet received from the device had an incorrect header. */
+/* DfMp3_Error_PacketChecksum = 132 - The packet received from the device had an incorrect checksum. */
+/* DfMp3_Error_General = 255 - Inconclusive problem happened. */
+
 #include <SoftwareSerial.h>
 #include <DFMiniMp3.h>
 
 /// ATTINY85
-#define RX PB0
-#define TX PB2
-SoftwareSerial Serial(RX, TX);
+/* #define RX PB0 */
+/* #define TX PB2 */
+/* SoftwareSerial Serial(RX, TX); */
 
 /// Arduino
-/* #define RX 10 */
-/* #define TX 11 */
+#define RX 10
+#define TX 11
 
 // implement a notification class,
 // its member methods will get called 
 //
+
+bool isPlaying = false;
+uint8_t playIndex = 0;
+
 class Mp3Notify
 {
 public:
@@ -38,7 +55,9 @@ public:
   {
     Serial.println();
     Serial.print("Play finished for #");
-    Serial.println(globalTrack);   
+    Serial.println(globalTrack);
+
+		isPlaying = false;
   }
 
   static void OnCardOnline(uint16_t code)
@@ -134,18 +153,30 @@ void loop()
 	/* waitMilliseconds(5000); */
   /* mp3.nextTrack(); */
 
-	Serial.println("track 1"); 
-  mp3.playFolderTrack(1, 1);  // sd:/01/001.mp3
+	if ( !isPlaying ) {
+		playIndex ++;
+		if ( playIndex > 3 ) {
+			playIndex = 1;
+		}
+
+		mp3.playFolderTrack(1, playIndex);
+		isPlaying = true;
+	}
+	
+	mp3.loop();
+	
+	/* Serial.println("track 1");  */
+  /* mp3.playFolderTrack(1, 1);  // sd:/01/001.mp3 */
   
-  waitMilliseconds(5000);
+  /* waitMilliseconds(5000); */
   
-  Serial.println("track 2"); 
-  mp3.playFolderTrack(1, 2); // sd:/01/002.mp3
+  /* Serial.println("track 2");  */
+  /* mp3.playFolderTrack(1, 2); // sd:/01/002.mp3 */
   
-  waitMilliseconds(5000);
+  /* waitMilliseconds(5000); */
   
-  Serial.println("track 3");
-  mp3.playFolderTrack(1, 3); // sd:/01/003.mp3
+  /* Serial.println("track 3"); */
+  /* mp3.playFolderTrack(1, 3); // sd:/01/003.mp3 */
   
-  waitMilliseconds(5000);
+  /* waitMilliseconds(5000); */
 }
