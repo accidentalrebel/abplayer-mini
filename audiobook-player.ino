@@ -118,13 +118,15 @@ void setup()
   Serial.begin(115200);
 
   Serial.println("initializing...");
-  
+
   mp3.begin();
+	delay(30);
 
   uint16_t volume = mp3.getVolume();
   Serial.print("volume ");
   Serial.println(volume);
   mp3.setVolume(24);
+	delay(30);
   
   uint16_t count = mp3.getTotalTrackCount();
   Serial.print("files ");
@@ -133,19 +135,6 @@ void setup()
 	//mp3.playMp3FolderTrack(1);
   
   Serial.println("starting...");
-}
-
-void waitMilliseconds(uint16_t msWait)
-{
-  uint32_t start = millis();
-  
-  while ((millis() - start) < msWait)
-  {
-    // calling mp3.loop() periodically allows for notifications 
-    // to be handled without interrupts
-    mp3.loop(); 
-    delay(1);
-  }
 }
 
 void loop() 
@@ -158,9 +147,19 @@ void loop()
 		if ( playIndex > 3 ) {
 			playIndex = 1;
 		}
+		Serial.print("PlayIndex is now ");
+		Serial.println(playIndex);
 
+		delay(30);
+		mp3.stop();
+		delay(30);
 		mp3.playFolderTrack(1, playIndex);
-		isPlaying = true;
+		delay(300);
+
+		Serial.print("Now playing ");
+		Serial.println(playIndex);
+
+		isPlaying = true;		
 	}
 	
 	mp3.loop();
