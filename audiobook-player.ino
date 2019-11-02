@@ -37,39 +37,11 @@ uint8_t playIndex = 0;
 bool isSwitching = false;
 
 class Mp3Notify;
+SoftwareSerial secondarySerial(RX, TX); // RX, TX
+DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
 
 class Player {
  public:
-	static DFMiniMp3<SoftwareSerial, Mp3Notify> mp3;
-
-	static void setup() {
-		Serial.begin(115200);
-
-		Serial.println("initializing...");
-
-		delay(5000); // It was suggested to have a 5 second delay before starting
-		mp3.begin();
-		delay(30);
-
-		uint16_t volume = mp3.getVolume();
-		Serial.print("volume ");
-		Serial.println(volume);
-		mp3.setVolume(24);
-		delay(30);
-  
-		uint16_t count = mp3.getTotalTrackCount();
-		Serial.print("files ");
-		Serial.println(count);
-
-		Serial.println("starting...");
-
-		Player::playNextTrack();
-	}
-
-	static void loop() {
-		mp3.loop();
-	}
-
 	static void playNextTrack() {
 		if ( !isSwitching ) {
 			isSwitching = true;
@@ -161,8 +133,30 @@ public:
   }
 };
 
-SoftwareSerial secondarySerial(RX, TX); // RX, TX
-DFMiniMp3<SoftwareSerial, Mp3Notify> Player::mp3(secondarySerial);
+void setup() {
+	Serial.begin(115200);
 
-void setup() { Player::setup(); }
-void loop() { Player::loop(); }
+	Serial.println("initializing...");
+
+	delay(5000); // It was suggested to have a 5 second delay before starting
+	mp3.begin();
+	delay(30);
+
+	uint16_t volume = mp3.getVolume();
+	Serial.print("volume ");
+	Serial.println(volume);
+	mp3.setVolume(24);
+	delay(30);
+  
+	uint16_t count = mp3.getTotalTrackCount();
+	Serial.print("files ");
+	Serial.println(count);
+
+	Serial.println("starting...");
+
+	Player::playNextTrack();
+}
+
+void loop() {
+	mp3.loop();
+}
