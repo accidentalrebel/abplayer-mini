@@ -25,13 +25,13 @@
 #include <DFMiniMp3.h>
 
 /// ATTINY85
-/* #define RX PB0 */
-/* #define TX PB2 */
-/* SoftwareSerial Serial(RX, TX); */
+#define RX PB0
+#define TX PB2
+SoftwareSerial Serial(RX, TX);
 
 /// Arduino
-#define RX 10
-#define TX 11
+/* #define RX 10 */
+/* #define TX 11 */
 
 // implement a notification class,
 // its member methods will get called 
@@ -119,6 +119,7 @@ void setup()
 
   Serial.println("initializing...");
 
+	delay(5000); // It was suggested to have a 5 second delay before starting
   mp3.begin();
 	delay(30);
 
@@ -150,6 +151,7 @@ void loop()
 		Serial.print("PlayIndex is now ");
 		Serial.println(playIndex);
 
+		// The delays and mp3.stop() helped fixed the COM 131 error.
 		delay(30);
 		mp3.stop();
 		delay(30);
