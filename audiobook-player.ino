@@ -25,24 +25,69 @@
 #include <DFMiniMp3.h>
 
 /// ATTINY85
-#define RX PB0
-#define TX PB2
-SoftwareSerial Serial(RX, TX);
+/* #define RX PB0 */
+/* #define TX PB2 */
+/* SoftwareSerial Serial(RX, TX); */
 
 /// Arduino
-/* #define RX 10 */
-/* #define TX 11 */
+#define RX 10
+#define TX 11
 
 // implement a notification class,
 // its member methods will get called 
 //
 
-bool isPlaying = false;
 uint8_t playIndex = 0;
+bool isSwitching = false;
+
+class Mp3Notify;
+
+class Player {
+ public:
+	static DFMiniMp3<SoftwareSerial, Mp3Notify> mp3;
+	
+	static void test() {
+		Serial.println("Test Player");
+	}
+
+	static void playNextTrack() {
+		if ( !isSwitching ) {
+			isSwitching = true;
+			
+			playIndex++;
+			if ( playIndex > 3 ) {
+				playIndex = 1;
+			}
+		
+			Serial.print("Playing ");
+			Serial.println(playIndex);
+			Serial.println("...");
+
+			//The delays and mp3.stop() helped fixed the COM 131 error.
+			delay(30);
+			mp3.stop();
+			delay(30);
+			mp3.playFolderTrack(1, playIndex);
+			delay(300);
+
+			Serial.print("Now playing ");
+			Serial.println(playIndex);
+
+			isSwitching = false;
+		}
+	}
+};
+
+class Registry {
+ public:
+	static Player player;
+};
 
 class Mp3Notify
 {
 public:
+	static Player player;
+	
   static void OnError(uint16_t errorCode)
   {
     // see DfMp3_Error for code meaning
@@ -54,10 +99,10 @@ public:
   static void OnPlayFinished(uint16_t globalTrack)
   {
     Serial.println();
-    Serial.print("Play finished for #");
+    Serial.print("OnPlayFinished for #");
     Serial.println(globalTrack);
 
-		isPlaying = false;
+		Player::playNextTrack();
   }
 
   static void OnCardOnline(uint16_t code)
@@ -111,7 +156,7 @@ public:
 // Some arduino boards only have one hardware serial port, so a software serial port is needed instead.
 // comment out the above definition and uncomment these lines
 SoftwareSerial secondarySerial(RX, TX); // RX, TX
-DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
+DFMiniMp3<SoftwareSerial, Mp3Notify> Player::mp3(secondarySerial);
 
 void setup() 
 {
@@ -120,64 +165,43 @@ void setup()
   Serial.println("initializing...");
 
 	delay(5000); // It was suggested to have a 5 second delay before starting
-  mp3.begin();
+  Player::mp3.begin();
 	delay(30);
 
-  uint16_t volume = mp3.getVolume();
+  uint16_t volume = Player::mp3.getVolume();
   Serial.print("volume ");
   Serial.println(volume);
-  mp3.setVolume(24);
+  Player::mp3.setVolume(24);
 	delay(30);
   
-  uint16_t count = mp3.getTotalTrackCount();
+  uint16_t count = Player::mp3.getTotalTrackCount();
   Serial.print("files ");
   Serial.println(count);
 
-	//mp3.playMp3FolderTrack(1);
-  
   Serial.println("starting...");
+
+	Player::playNextTrack();
 }
 
 void loop() 
 {
 	/* waitMilliseconds(5000); */
-  /* mp3.nextTrack(); */
-
-	if ( !isPlaying ) {
-		playIndex ++;
-		if ( playIndex > 3 ) {
-			playIndex = 1;
-		}
-		Serial.print("PlayIndex is now ");
-		Serial.println(playIndex);
-
-		// The delays and mp3.stop() helped fixed the COM 131 error.
-		delay(30);
-		mp3.stop();
-		delay(30);
-		mp3.playFolderTrack(1, playIndex);
-		delay(300);
-
-		Serial.print("Now playing ");
-		Serial.println(playIndex);
-
-		isPlaying = true;		
-	}
+  /* Player::mp3.nextTrack(); */
 	
-	mp3.loop();
+	Player::mp3.loop();
 	
 	/* Serial.println("track 1");  */
-  /* mp3.playFolderTrack(1, 1);  // sd:/01/001.mp3 */
+  /* Player::mp3.playFolderTrack(1, 1);  // sd:/01/001.mp3 */
   
   /* waitMilliseconds(5000); */
   
   /* Serial.println("track 2");  */
-  /* mp3.playFolderTrack(1, 2); // sd:/01/002.mp3 */
+  /* Player::mp3.playFolderTrack(1, 2); // sd:/01/002.mp3 */
   
   /* waitMilliseconds(5000); */
   
   /* Serial.println("track 3"); */
-  /* mp3.playFolderTrack(1, 3); // sd:/01/003.mp3 */
+  /* Player::mp3.playFolderTrack(1, 3); // sd:/01/003.mp3 */
   
   /* waitMilliseconds(5000); */
 }
