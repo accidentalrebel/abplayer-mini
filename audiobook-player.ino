@@ -23,6 +23,7 @@
 
 #include <SoftwareSerial.h>
 #include <DFMiniMp3.h>
+#include <ssd1306xled.h>
 
 #define IS_ATTINY_85 true
 
@@ -31,6 +32,9 @@
 #define RX PB4
 #define TX PB1
 SoftwareSerial Serial(RX, TX);
+
+#define SSD1306_SCL PB2	
+#define SSD1306_SDA	PB0
 
 #else
 /// Arduino
@@ -142,6 +146,9 @@ public:
 };
 
 void setup() {
+  SSD1306.ssd1306_init();
+	SSD1306.ssd1306_fillscreen(0x00);
+	
 	pinMode(PB3, OUTPUT);
 
 	Serial.begin(115200);
@@ -171,5 +178,9 @@ void setup() {
 }
 
 void loop() {
-	mp3.loop();
+	if ( !isSwitching ) {
+		mp3.loop();
+	}
+
+	SSD1306.ssd1306_string_font6x8("TEST");
 }
