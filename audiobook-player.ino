@@ -25,6 +25,13 @@
 #include <DFMiniMp3.h>
 #include <ssd1306xled.h>
 
+#define V_NOMINAL 3.7
+#define V_DROP_1 1.4567
+#define V_DROP_2 0.8297
+#define V_DROP_3 0.3947
+#define V_DROP_4 0.1877
+#define ALLOWANCE 50
+
 #define IS_ATTINY_85 true
 
 #if IS_ATTINY_85 == true
@@ -45,6 +52,7 @@ SoftwareSerial Serial(RX, TX);
 
 uint16_t playIndex = 0;
 bool isSwitching = false;
+int analogValue = 0;
 
 class Mp3Notify;
 SoftwareSerial secondarySerial(RX, TX);
@@ -61,6 +69,18 @@ void logInt(uint16_t val, bool canClear = false) {
 	char buffer[20];
 	snprintf(buffer, sizeof(buffer), "%u", val);
 	log(buffer, canClear);
+}
+
+bool detectKeyPress(int readValue, float voltageDrop) {
+	float change = voltageDrop / V_NOMINAL;
+	float computed = 1023 * change;
+	logInt((uint16_t)(change * 100));
+	log(">");
+	logInt((uint16_t)computed);
+	if ( readValue >= computed - ALLOWANCE && readValue <= computed + ALLOWANCE ) {
+		return true;
+	}
+	return false;
 }
 
 class Player {
@@ -148,9 +168,12 @@ public:
 };
 
 void setup() {
+	analogReference(DEFAULT);
+	
   SSD1306.ssd1306_init();
 	SSD1306.ssd1306_fillscreen(0x00);
-	
+
+	pinMode(A3, INPUT);
 	pinMode(PB3, OUTPUT);
 
 	Serial.begin(115200);
@@ -176,7 +199,29 @@ void setup() {
 }
 
 void loop() {
-	if ( !isSwitching ) {
-		mp3.loop();
+	/* if ( !isSwitching ) { */
+	/* 	mp3.loop(); */
+	/* } */
+
+	analogValue = analogRead(A3);
+
+	SSD1306.ssd1306_setpos(2, 2);
+	logInt(analogValue);
+
+	SSD1306.ssd1306_setpos(3, 3);
+	if ( detectKeyPress(analogValue, V_DROP_1) ) {
+		SSD1306.ssd1306_string_font6x8("Button 1");
 	}
+	else if ( detectKeyPress(analogValue, V_DROP_2) ) {
+		SSD1306.ssd1306_string_font6x8("Button 2");
+	}
+	else if ( detectKeyPress(analogValue, V_DROP_3) ) {
+		SSD1306.ssd1306_string_font6x8("Button 3");
+	}
+	else if ( detectKeyPress(analogValue, V_DROP_4) ) {
+		SSD1306.ssd1306_string_font6x8("Button 4");
+	}
+	
+	delay(500);
+	SSD1306.ssd1306_fillscreen(0x00);	
 }
