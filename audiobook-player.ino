@@ -43,12 +43,25 @@ SoftwareSerial Serial(RX, TX);
 
 #endif
 
-uint8_t playIndex = 0;
+uint16_t playIndex = 0;
 bool isSwitching = false;
 
 class Mp3Notify;
 SoftwareSerial secondarySerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
+
+void log(char* log, bool canClear = false) {
+	if ( canClear ) {
+		SSD1306.ssd1306_fillscreen(0x00);
+	}
+	SSD1306.ssd1306_string_font6x8(log);
+}
+
+void logInt(uint16_t val, bool canClear = false) {
+	char buffer[20];
+	snprintf(buffer, sizeof(buffer), "%u", val);
+	log(buffer, canClear);
+}
 
 class Player {
  public:
@@ -61,10 +74,6 @@ class Player {
 				playIndex = 1;
 			}
 		
-			Serial.print("Playing ");
-			Serial.println(playIndex);
-			Serial.println("...");
-
 			//The delays and mp3.stop() helped fixed the COM 131 error.
 			delay(30);
 			mp3.stop();
@@ -72,8 +81,8 @@ class Player {
 			mp3.playFolderTrack(1, playIndex);
 			delay(300);
 
-			Serial.print("Now playing ");
-			Serial.println(playIndex);
+			log("Playing ", true);
+			logInt(playIndex);
 
 			isSwitching = false;
 		}
@@ -86,62 +95,55 @@ public:
   static void OnError(uint16_t errorCode)
   {
     // see DfMp3_Error for code meaning
-    Serial.println();
-    Serial.print("Com Error ");
-    Serial.println(errorCode);
+    log("Error ", true);
+    logInt(errorCode);
 
 		digitalWrite(PB3, HIGH);
   }
 
   static void OnPlayFinished(uint16_t globalTrack)
   {
-    Serial.println();
-    Serial.print("OnPlayFinished for #");
-    Serial.println(globalTrack);
+    log("Finished ");
+    logInt(globalTrack);
+		log(".");
 
 		Player::playNextTrack();
   }
 
   static void OnCardOnline(uint16_t code)
   {
-    Serial.println();
-    Serial.print("Card online ");
-    Serial.println(code);     
+    log("Card online", true);
+    //logInt(code);     
   }
 
   static void OnUsbOnline(uint16_t code)
   {
-    Serial.println();
-    Serial.print("USB Disk online ");
-    Serial.println(code);     
+    log("USB Disk online", true);
+    //logInt(code);     
   }
 
   static void OnCardInserted(uint16_t code)
   {
-    Serial.println();
-    Serial.print("Card inserted ");
-    Serial.println(code); 
+    log("Card inserted", true);
+    //logInt(code); 
   }
 
   static void OnUsbInserted(uint16_t code)
   {
-    Serial.println();
-    Serial.print("USB Disk inserted ");
-    Serial.println(code); 
+    log("USB Disk inserted", true);
+    //logInt(code); 
   }
 
   static void OnCardRemoved(uint16_t code)
   {
-    Serial.println();
-    Serial.print("Card removed ");
-    Serial.println(code);  
+    log("Card removed", true);
+    //logInt(code);  
   }
 
   static void OnUsbRemoved(uint16_t code)
   {
-    Serial.println();
-    Serial.print("USB Disk removed ");
-    Serial.println(code);  
+    log("USB Disk removed", true);
+    //logInt(code);  
   }
 };
 
@@ -153,8 +155,6 @@ void setup() {
 
 	Serial.begin(115200);
 
-	Serial.println("initializing...");
-
 	digitalWrite(PB3, HIGH);
 	delay(1000);
 	mp3.begin();
@@ -163,16 +163,14 @@ void setup() {
 	delay(500);
 
 	uint16_t volume = mp3.getVolume();
-	Serial.print("volume ");
-	Serial.println(volume);
+	log("Volume: ", true);
+	logInt(volume);
 	mp3.setVolume(24);
 	delay(30);
   
 	uint16_t count = mp3.getTotalTrackCount();
-	Serial.print("files ");
-	Serial.println(count);
-
-	Serial.println("starting...");
+	log(". Count: ");
+	logInt(count);
 
 	Player::playNextTrack();
 }
@@ -181,6 +179,4 @@ void loop() {
 	if ( !isSwitching ) {
 		mp3.loop();
 	}
-
-	SSD1306.ssd1306_string_font6x8("TEST");
 }
