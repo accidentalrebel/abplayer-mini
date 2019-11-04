@@ -25,13 +25,13 @@
 #include <DFMiniMp3.h>
 
 /// ATTINY85
-/* #define RX PB0 */
-/* #define TX PB2 */
-/* SoftwareSerial Serial(RX, TX); */
+#define RX PB4
+#define TX PB1
+SoftwareSerial Serial(RX, TX);
 
 /// Arduino
-#define RX 10
-#define TX 11
+/* #define RX 10 */
+/* #define TX 11 */
 
 uint8_t playIndex = 0;
 bool isSwitching = false;
@@ -79,6 +79,8 @@ public:
     Serial.println();
     Serial.print("Com Error ");
     Serial.println(errorCode);
+
+		digitalWrite(PB3, HIGH);
   }
 
   static void OnPlayFinished(uint16_t globalTrack)
@@ -134,13 +136,18 @@ public:
 };
 
 void setup() {
+	pinMode(PB3, OUTPUT);
+
 	Serial.begin(115200);
 
 	Serial.println("initializing...");
 
-	delay(5000); // It was suggested to have a 5 second delay before starting
+	digitalWrite(PB3, HIGH);
+	delay(1000);
 	mp3.begin();
-	delay(30);
+	mp3.reset();
+	digitalWrite(PB3, LOW);
+	delay(500);
 
 	uint16_t volume = mp3.getVolume();
 	Serial.print("volume ");
