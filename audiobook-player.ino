@@ -24,20 +24,26 @@
 #include <SoftwareSerial.h>
 #include <DFMiniMp3.h>
 
+#define IS_ATTINY_85 true
+
+#if IS_ATTINY_85 == true
 /// ATTINY85
 #define RX PB4
 #define TX PB1
 SoftwareSerial Serial(RX, TX);
 
+#else
 /// Arduino
-/* #define RX 10 */
-/* #define TX 11 */
+#define RX 10
+#define TX 11
+
+#endif
 
 uint8_t playIndex = 0;
 bool isSwitching = false;
 
 class Mp3Notify;
-SoftwareSerial secondarySerial(RX, TX); // RX, TX
+SoftwareSerial secondarySerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
 
 class Player {
