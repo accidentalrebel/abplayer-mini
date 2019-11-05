@@ -51,7 +51,6 @@ SoftwareSerial Serial(RX, TX);
 #endif
 
 uint16_t playIndex = 0;
-bool isSwitching = false;
 int analogValue = 0;
 
 class Mp3Notify;
@@ -104,30 +103,48 @@ bool Input::isAnyKeyPressed = false;
 
 class Player {
  public:
+	static bool isSwitching;
 	static bool isPlaying;
 	
 	static void playNextTrack() {
-		if ( !isSwitching ) {
-			isSwitching = true;
-			
-			playIndex++;
-			if ( playIndex > 3 ) {
-				playIndex = 1;
-			}
-		
-			//The delays and mp3.stop() helped fixed the COM 131 error.
-			delay(30);
-			mp3.stop();
-			delay(30);
-			mp3.playFolderTrack(1, playIndex);
-			delay(300);
-
-			log("Playing ", true);
-			logInt(playIndex);
-
-			isSwitching = false;
-			isPlaying = true;
+		if ( isSwitching ) {
+			return;
 		}
+		playIndex++;
+		if ( playIndex > 3 ) {
+			playIndex = 1;
+		}
+
+		playCurrentTrack();
+	}
+
+	static void playPrevTrack() {
+		if ( isSwitching ) {
+			return;
+		}
+		playIndex--;
+		if ( playIndex < 0 ) {
+			playIndex = 3;
+		}
+
+		playCurrentTrack();
+	}
+
+	static void playCurrentTrack() {
+		isSwitching = true;
+
+		//The delays and mp3.stop() helped fixed the COM 131 error.
+		delay(30);
+		mp3.stop();
+		delay(30);
+		mp3.playFolderTrack(1, playIndex);
+		delay(300);
+
+		log("Playing ", true);
+		logInt(playIndex);
+
+		isPlaying = true;
+		isSwitching = false;
 	}
 
 	static void resume() {
@@ -149,6 +166,7 @@ class Player {
 	}
 };
 bool Player::isPlaying = false;
+bool Player::isSwitching = false;
 
 class Mp3Notify
 {
@@ -244,7 +262,7 @@ void setup() {
 }
 
 void loop() {
-	if ( !isSwitching ) {
+	if ( !Player::isSwitching ) {
 		mp3.loop();
 
 		analogValue = analogRead(A3);
@@ -253,7 +271,7 @@ void loop() {
 		if ( !Input::isAnyKeyPressed && key > 0 ) {
 			SSD1306.ssd1306_setpos(3, 3);
 			if ( key == 1 ) {
-				SSD1306.ssd1306_string_font6x8("Button 1");
+				Player::playPrevTrack();
 			}
 			else if ( key == 2 ) {
 				if ( Player::isPlaying ) {
@@ -266,7 +284,7 @@ void loop() {
 				}
 			}
 			else if ( key == 3 ) {
-				SSD1306.ssd1306_string_font6x8("Button 3");
+				Player::playNextTrack();
 			}
 			else if ( key == 4 ) {
 				SSD1306.ssd1306_string_font6x8("Button 4");
