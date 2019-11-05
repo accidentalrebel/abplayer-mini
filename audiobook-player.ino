@@ -50,9 +50,6 @@ SoftwareSerial Serial(RX, TX);
 
 #endif
 
-uint16_t playIndex = 0;
-int analogValue = 0;
-
 class Mp3Notify;
 SoftwareSerial secondarySerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
@@ -103,6 +100,7 @@ bool Input::isAnyKeyPressed = false;
 
 class Player {
  public:
+	static uint16_t playIndex;	
 	static bool isSwitching;
 	static bool isPlaying;
 	
@@ -123,7 +121,7 @@ class Player {
 			return;
 		}
 		playIndex--;
-		if ( playIndex < 0 ) {
+		if ( playIndex < 1 ) {
 			playIndex = 3;
 		}
 
@@ -137,11 +135,11 @@ class Player {
 		delay(30);
 		mp3.stop();
 		delay(30);
-		mp3.playFolderTrack(1, playIndex);
+		mp3.playFolderTrack(1, Player::playIndex);
 		delay(300);
 
 		log("Playing ", true);
-		logInt(playIndex);
+		logInt(Player::playIndex);
 
 		isPlaying = true;
 		isSwitching = false;
@@ -167,6 +165,7 @@ class Player {
 };
 bool Player::isPlaying = false;
 bool Player::isSwitching = false;
+uint16_t Player::playIndex = 0;
 
 class Mp3Notify
 {
@@ -265,7 +264,7 @@ void loop() {
 	if ( !Player::isSwitching ) {
 		mp3.loop();
 
-		analogValue = analogRead(A3);
+		int analogValue = analogRead(A3);
 
 		uint16_t key = Input::getKeyPress(analogValue);
 		if ( !Input::isAnyKeyPressed && key > 0 ) {
