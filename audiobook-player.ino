@@ -71,14 +71,36 @@ void logInt(uint16_t val, bool canClear = false) {
 	log(buffer, canClear);
 }
 
-bool detectKeyPress(int readValue, float voltageDrop) {
-	float change = voltageDrop / V_NOMINAL;
-	float computed = 1023 * change;
-	if ( readValue >= computed - ALLOWANCE && readValue <= computed + ALLOWANCE ) {
-		return true;
+class Input {
+ public:
+	static bool isAnyKeyPressed;
+
+	static uint16_t getKeyPress(int analogValue) {
+		if ( Input::detectKeyPress(analogValue, V_DROP_1)	) {
+			return 1;
+		}
+		else if ( Input::detectKeyPress(analogValue, V_DROP_2)	) {
+			return 2;
+		}
+		else if ( Input::detectKeyPress(analogValue, V_DROP_3)	) {
+			return 3;
+		}
+		else if ( Input::detectKeyPress(analogValue, V_DROP_4)	) {
+			return 4;
+		}
+		return 0;
 	}
-	return false;
-}
+	
+	static bool detectKeyPress(int readValue, float voltageDrop) {
+		float change = voltageDrop / V_NOMINAL;
+		float computed = 1023 * change;
+		if ( readValue >= computed - ALLOWANCE && readValue <= computed + ALLOWANCE ) {
+			return true;
+		}
+		return false;
+	}
+};
+bool Input::isAnyKeyPressed = false;
 
 class Player {
  public:
@@ -134,6 +156,7 @@ public:
   static void OnError(uint16_t errorCode)
   {
     // see DfMp3_Error for code meaning
+		SSD1306.ssd1306_setpos(3, 0);
     log("Error ", true);
     logInt(errorCode);
 
@@ -142,6 +165,7 @@ public:
 
   static void OnPlayFinished(uint16_t globalTrack)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("Finished ");
     logInt(globalTrack);
 		log(".");
@@ -151,36 +175,42 @@ public:
 
   static void OnCardOnline(uint16_t code)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("Card online", true);
     //logInt(code);     
   }
 
   static void OnUsbOnline(uint16_t code)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("USB Disk online", true);
     //logInt(code);     
   }
 
   static void OnCardInserted(uint16_t code)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("Card inserted", true);
     //logInt(code); 
   }
 
   static void OnUsbInserted(uint16_t code)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("USB Disk inserted", true);
     //logInt(code); 
   }
 
   static void OnCardRemoved(uint16_t code)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("Card removed", true);
     //logInt(code);  
   }
 
   static void OnUsbRemoved(uint16_t code)
   {
+		SSD1306.ssd1306_setpos(3, 0);
     log("USB Disk removed", true);
     //logInt(code);  
   }
@@ -219,25 +249,32 @@ void loop() {
 
 		analogValue = analogRead(A3);
 
-		SSD1306.ssd1306_setpos(3, 3);
-		if ( detectKeyPress(analogValue, V_DROP_1) ) {
-			SSD1306.ssd1306_string_font6x8("Button 1");
-		}
-		else if ( detectKeyPress(analogValue, V_DROP_2) ) {
-			if ( Player::isPlaying ) {
-				Player::pause();
-				SSD1306.ssd1306_string_font6x8("Pausing");
+		uint16_t key = Input::getKeyPress(analogValue);
+		if ( !Input::isAnyKeyPressed && key > 0 ) {
+			SSD1306.ssd1306_setpos(3, 3);
+			if ( key == 1 ) {
+				SSD1306.ssd1306_string_font6x8("Button 1");
 			}
-			else {
-				Player::resume();
-				SSD1306.ssd1306_string_font6x8("Resuming");
+			else if ( key == 2 ) {
+				if ( Player::isPlaying ) {
+					Player::pause();
+					SSD1306.ssd1306_string_font6x8("Pausing");
+				}
+				else {
+					Player::resume();
+					SSD1306.ssd1306_string_font6x8("Resuming");
+				}
 			}
+			else if ( key == 3 ) {
+				SSD1306.ssd1306_string_font6x8("Button 3");
+			}
+			else if ( key == 4 ) {
+				SSD1306.ssd1306_string_font6x8("Button 4");
+			}
+			Input::isAnyKeyPressed = true;
 		}
-		else if ( detectKeyPress(analogValue, V_DROP_3) ) {
-			SSD1306.ssd1306_string_font6x8("Button 3");
-		}
-		else if ( detectKeyPress(analogValue, V_DROP_4) ) {
-			SSD1306.ssd1306_string_font6x8("Button 4");
+		else if ( Input::isAnyKeyPressed && key <= 0 ) {
+			Input::isAnyKeyPressed = false;
 		}
 	}
 }
