@@ -30,7 +30,7 @@
 #define V_DROP_2 0.8297
 #define V_DROP_3 0.3947
 #define V_DROP_4 0.1877
-#define ALLOWANCE 50
+#define ALLOWANCE 30
 
 #define IS_ATTINY_85 true
 
@@ -74,9 +74,6 @@ void logInt(uint16_t val, bool canClear = false) {
 bool detectKeyPress(int readValue, float voltageDrop) {
 	float change = voltageDrop / V_NOMINAL;
 	float computed = 1023 * change;
-	logInt((uint16_t)(change * 100));
-	log(">");
-	logInt((uint16_t)computed);
 	if ( readValue >= computed - ALLOWANCE && readValue <= computed + ALLOWANCE ) {
 		return true;
 	}
@@ -85,6 +82,8 @@ bool detectKeyPress(int readValue, float voltageDrop) {
 
 class Player {
  public:
+	static bool isPlaying;
+	
 	static void playNextTrack() {
 		if ( !isSwitching ) {
 			isSwitching = true;
@@ -105,9 +104,29 @@ class Player {
 			logInt(playIndex);
 
 			isSwitching = false;
+			isPlaying = true;
 		}
 	}
+
+	static void resume() {
+		if ( isPlaying ) {
+			return;
+		}
+
+		mp3.start();
+		isPlaying = true;
+	}
+
+	static void pause() {
+		if ( !isPlaying ) {
+			return;
+		}
+
+		mp3.pause();
+		isPlaying = false;
+	}
 };
+bool Player::isPlaying = false;
 
 class Mp3Notify
 {
@@ -186,42 +205,39 @@ void setup() {
 	delay(500);
 
 	uint16_t volume = mp3.getVolume();
-	log("Volume: ", true);
-	logInt(volume);
 	mp3.setVolume(24);
 	delay(30);
   
 	uint16_t count = mp3.getTotalTrackCount();
-	log(". Count: ");
-	logInt(count);
 
 	Player::playNextTrack();
 }
 
 void loop() {
-	/* if ( !isSwitching ) { */
-	/* 	mp3.loop(); */
-	/* } */
+	if ( !isSwitching ) {
+		mp3.loop();
 
-	analogValue = analogRead(A3);
+		analogValue = analogRead(A3);
 
-	SSD1306.ssd1306_setpos(2, 2);
-	logInt(analogValue);
-
-	SSD1306.ssd1306_setpos(3, 3);
-	if ( detectKeyPress(analogValue, V_DROP_1) ) {
-		SSD1306.ssd1306_string_font6x8("Button 1");
+		SSD1306.ssd1306_setpos(3, 3);
+		if ( detectKeyPress(analogValue, V_DROP_1) ) {
+			SSD1306.ssd1306_string_font6x8("Button 1");
+		}
+		else if ( detectKeyPress(analogValue, V_DROP_2) ) {
+			if ( Player::isPlaying ) {
+				Player::pause();
+				SSD1306.ssd1306_string_font6x8("Pausing");
+			}
+			else {
+				Player::resume();
+				SSD1306.ssd1306_string_font6x8("Resuming");
+			}
+		}
+		else if ( detectKeyPress(analogValue, V_DROP_3) ) {
+			SSD1306.ssd1306_string_font6x8("Button 3");
+		}
+		else if ( detectKeyPress(analogValue, V_DROP_4) ) {
+			SSD1306.ssd1306_string_font6x8("Button 4");
+		}
 	}
-	else if ( detectKeyPress(analogValue, V_DROP_2) ) {
-		SSD1306.ssd1306_string_font6x8("Button 2");
-	}
-	else if ( detectKeyPress(analogValue, V_DROP_3) ) {
-		SSD1306.ssd1306_string_font6x8("Button 3");
-	}
-	else if ( detectKeyPress(analogValue, V_DROP_4) ) {
-		SSD1306.ssd1306_string_font6x8("Button 4");
-	}
-	
-	delay(500);
-	SSD1306.ssd1306_fillscreen(0x00);	
 }
