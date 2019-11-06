@@ -5,7 +5,9 @@
 #include "AudioBookPlayer.h"
 
 class Input {
+  static unsigned long timePressed;
  public:
+  static unsigned long pressedDuration;
   static uint16_t pressedButton;
   static uint16_t releasedButton;
   static bool isAnyButtonPressed;

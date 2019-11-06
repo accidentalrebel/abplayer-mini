@@ -3,16 +3,27 @@
 bool Input::isAnyButtonPressed = false;
 uint16_t Input::pressedButton = 0;
 uint16_t Input::releasedButton = 0;
+unsigned long Input::timePressed = 0;
+unsigned long Input::pressedDuration = 0;
 
 void Input::loop() {
   int analogValue = analogRead(A3);
   uint16_t button = Input::getButtonPress(analogValue);
   if ( button > 0 ) {
     pressedButton = button;
+
+    if ( timePressed == 0 ) {
+      timePressed = millis();
+      pressedDuration = 0;
+    }
   }
   else {
     releasedButton = pressedButton;
     pressedButton = 0;
+
+    SSD1306.ssd1306_setpos(4, 4);
+    pressedDuration = millis() - timePressed;
+    timePressed = 0;
   }
 }
 

@@ -50,7 +50,7 @@ void loop() {
 			Player::playNextTrack();
 		}
 		else if ( Input::releasedButton == 4 ) {
-			if ( Display::isTurnedOn ) {
+			if ( Display::isTurnedOn && Input::pressedDuration >= 2000 ) {
 				Display::sleep();
 			}
 			else {
