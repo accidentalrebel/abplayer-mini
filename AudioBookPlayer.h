@@ -6,6 +6,7 @@
 #include <ssd1306xled.h>
 #include "Input.h"
 #include "Player.h"
+#include "Mp3Notify.h"
 
 #define V_NOMINAL 3.7
 #define V_DROP_1 1.4567
@@ -31,10 +32,7 @@
 
 #endif
 
-#ifndef MP3NOTIFY_H
-#define MP3NOTIFY_H
 class Mp3Notify;
-#endif
 
 class AudioBookPlayer {
  public:
