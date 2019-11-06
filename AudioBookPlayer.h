@@ -4,6 +4,7 @@
 #include <SoftwareSerial.h>
 #include <DFMiniMp3.h>
 #include <ssd1306xled.h>
+#include "Input.h"
 
 #define V_NOMINAL 3.7
 #define V_DROP_1 1.4567
