@@ -39,78 +39,72 @@ void AudioBookPlayer::logInt(uint16_t val, bool canClear = false) {
 	log(buffer, canClear);
 }
 
-class Player {
- public:
-	static uint16_t playIndex;	
-	static bool isSwitching;
-	static bool isPlaying;
-	
-	static void playNextTrack() {
-		if ( isSwitching ) {
-			return;
-		}
-		playIndex++;
-		if ( playIndex > 3 ) {
-			playIndex = 1;
-		}
-
-		playCurrentTrack();
+static void Player::playNextTrack() {
+	if ( isSwitching ) {
+		return;
+	}
+	playIndex++;
+	if ( playIndex > 3 ) {
+		playIndex = 1;
 	}
 
-	static void playPrevTrack() {
-		if ( isSwitching ) {
-			return;
-		}
-		playIndex--;
-		if ( playIndex < 1 ) {
-			playIndex = 3;
-		}
+	playCurrentTrack();
+}
 
-		playCurrentTrack();
+static void Player::playPrevTrack() {
+	if ( isSwitching ) {
+		return;
+	}
+	playIndex--;
+	if ( playIndex < 1 ) {
+		playIndex = 3;
 	}
 
-	static void playCurrentTrack() {
-		isSwitching = true;
+	playCurrentTrack();
+}
 
-		//The delays and AudioBookPlayer::mp3.stop() helped fixed the COM 131 error.
-		delay(30);
-		AudioBookPlayer::mp3.stop();
-		delay(30);
-		AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
-		delay(300);
+static void Player::playCurrentTrack() {
+	isSwitching = true;
 
-		AudioBookPlayer::log("Playing ", true);
-		AudioBookPlayer::logInt(Player::playIndex);
+	//The delays and AudioBookPlayer::mp3.stop() helped fixed the COM 131 error.
+	delay(30);
+	AudioBookPlayer::mp3.stop();
+	delay(30);
+	AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
+	delay(300);
 
-		isPlaying = true;
-		isSwitching = false;
+	AudioBookPlayer::log("Playing ", true);
+	AudioBookPlayer::logInt(Player::playIndex);
+
+	isPlaying = true;
+	isSwitching = false;
+}
+
+static void Player::resume() {
+	if ( isPlaying ) {
+		return;
 	}
 
-	static void resume() {
-		if ( isPlaying ) {
-			return;
-		}
+	AudioBookPlayer::mp3.start();
+	isPlaying = true;
+}
 
-		AudioBookPlayer::mp3.start();
-		isPlaying = true;
+static void Player::pause() {
+	if ( !isPlaying ) {
+		return;
 	}
 
-	static void pause() {
-		if ( !isPlaying ) {
-			return;
-		}
+	AudioBookPlayer::mp3.pause();
+	isPlaying = false;
+}
 
-		AudioBookPlayer::mp3.pause();
-		isPlaying = false;
-	}
-};
-bool Player::isPlaying = false;
-bool Player::isSwitching = false;
-uint16_t Player::playIndex = 0;
+/* bool Player::isPlaying = false; */
+/* bool Player::isSwitching = false; */
+/* uint16_t Player::playIndex = 0; */
 
 class Mp3Notify
 {
-public:
+ public:
   static void OnError(uint16_t errorCode)
   {
     // see DfMp3_Error for code meaning
