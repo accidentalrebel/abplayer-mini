@@ -26,14 +26,14 @@
 SoftwareSerial AudioBookPlayer::secondarySerial = SoftwareSerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> AudioBookPlayer::mp3 = DFMiniMp3<SoftwareSerial, Mp3Notify>(AudioBookPlayer::secondarySerial);
 
-void log(char* log, bool canClear = false) {
+void AudioBookPlayer::log(char* log, bool canClear = false) {
 	if ( canClear ) {
 		SSD1306.ssd1306_fillscreen(0x00);
 	}
 	SSD1306.ssd1306_string_font6x8(log);
 }
 
-void logInt(uint16_t val, bool canClear = false) {
+void AudioBookPlayer::logInt(uint16_t val, bool canClear = false) {
 	char buffer[20];
 	snprintf(buffer, sizeof(buffer), "%u", val);
 	log(buffer, canClear);
@@ -79,8 +79,8 @@ class Player {
 		AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 		delay(300);
 
-		log("Playing ", true);
-		logInt(Player::playIndex);
+		AudioBookPlayer::log("Playing ", true);
+		AudioBookPlayer::logInt(Player::playIndex);
 
 		isPlaying = true;
 		isSwitching = false;
@@ -115,8 +115,8 @@ public:
   {
     // see DfMp3_Error for code meaning
 		SSD1306.ssd1306_setpos(3, 0);
-    log("Error ", true);
-    logInt(errorCode);
+    AudioBookPlayer::log("Error ", true);
+    AudioBookPlayer::logInt(errorCode);
 
 		digitalWrite(PB3, HIGH);
   }
@@ -124,9 +124,9 @@ public:
   static void OnPlayFinished(uint16_t globalTrack)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("Finished ");
-    logInt(globalTrack);
-		log(".");
+    AudioBookPlayer::log("Finished ");
+    AudioBookPlayer::logInt(globalTrack);
+		AudioBookPlayer::log(".");
 
 		Player::playNextTrack();
   }
@@ -134,43 +134,43 @@ public:
   static void OnCardOnline(uint16_t code)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("Card online", true);
-    //logInt(code);     
+    AudioBookPlayer::log("Card online", true);
+    //AudioBookPlayer::logInt(code);     
   }
 
   static void OnUsbOnline(uint16_t code)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("USB Disk online", true);
-    //logInt(code);     
+    AudioBookPlayer::log("USB Disk online", true);
+    //AudioBookPlayer::logInt(code);     
   }
 
   static void OnCardInserted(uint16_t code)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("Card inserted", true);
-    //logInt(code); 
+    AudioBookPlayer::log("Card inserted", true);
+    //AudioBookPlayer::logInt(code); 
   }
 
   static void OnUsbInserted(uint16_t code)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("USB Disk inserted", true);
-    //logInt(code); 
+    AudioBookPlayer::log("USB Disk inserted", true);
+    //AudioBookPlayer::logInt(code); 
   }
 
   static void OnCardRemoved(uint16_t code)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("Card removed", true);
-    //logInt(code);  
+    AudioBookPlayer::log("Card removed", true);
+    //AudioBookPlayer::logInt(code);  
   }
 
   static void OnUsbRemoved(uint16_t code)
   {
 		SSD1306.ssd1306_setpos(3, 0);
-    log("USB Disk removed", true);
-    //logInt(code);  
+    AudioBookPlayer::log("USB Disk removed", true);
+    //AudioBookPlayer::logInt(code);  
   }
 };
 

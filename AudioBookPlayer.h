@@ -35,6 +35,9 @@ class AudioBookPlayer {
  public:
   static SoftwareSerial secondarySerial;
   static DFMiniMp3<SoftwareSerial, Mp3Notify> mp3;
+
+  static void log(char* log, bool canClear = false);
+  static void logInt(uint16_t val, bool canClear = false);
 };
 
 #endif
