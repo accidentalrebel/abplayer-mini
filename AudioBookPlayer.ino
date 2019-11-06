@@ -21,37 +21,10 @@
 /* DfMp3_Error_PacketChecksum = 132 - The packet received from the device had an incorrect checksum. */
 /* DfMp3_Error_General = 255 - Inconclusive problem happened. */
 
-#include <SoftwareSerial.h>
-#include <DFMiniMp3.h>
-#include <ssd1306xled.h>
+#include "AudioBookPlayer.h"
 
-#define V_NOMINAL 3.7
-#define V_DROP_1 1.4567
-#define V_DROP_2 0.8297
-#define V_DROP_3 0.3947
-#define V_DROP_4 0.1877
-#define ALLOWANCE 30
-
-#define IS_ATTINY_85 true
-
-#if IS_ATTINY_85 == true
-/// ATTINY85
-#define RX PB4
-#define TX PB1
-
-#define SSD1306_SCL PB2	
-#define SSD1306_SDA	PB0
-
-#else
-/// Arduino
-#define RX 10
-#define TX 11
-
-#endif
-
-class Mp3Notify;
-SoftwareSerial secondarySerial(RX, TX);
-DFMiniMp3<SoftwareSerial, Mp3Notify> mp3(secondarySerial);
+SoftwareSerial AudioBookPlayer::secondarySerial = SoftwareSerial(RX, TX);
+DFMiniMp3<SoftwareSerial, Mp3Notify> AudioBookPlayer::mp3 = DFMiniMp3<SoftwareSerial, Mp3Notify>(AudioBookPlayer::secondarySerial);
 
 void log(char* log, bool canClear = false) {
 	if ( canClear ) {
@@ -130,11 +103,11 @@ class Player {
 	static void playCurrentTrack() {
 		isSwitching = true;
 
-		//The delays and mp3.stop() helped fixed the COM 131 error.
+		//The delays and AudioBookPlayer::mp3.stop() helped fixed the COM 131 error.
 		delay(30);
-		mp3.stop();
+		AudioBookPlayer::mp3.stop();
 		delay(30);
-		mp3.playFolderTrack(1, Player::playIndex);
+		AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 		delay(300);
 
 		log("Playing ", true);
@@ -149,7 +122,7 @@ class Player {
 			return;
 		}
 
-		mp3.start();
+		AudioBookPlayer::mp3.start();
 		isPlaying = true;
 	}
 
@@ -158,7 +131,7 @@ class Player {
 			return;
 		}
 
-		mp3.pause();
+		AudioBookPlayer::mp3.pause();
 		isPlaying = false;
 	}
 };
@@ -243,23 +216,23 @@ void setup() {
 
 	digitalWrite(PB3, HIGH);
 	delay(1000);
-	mp3.begin();
-	mp3.reset();
+	AudioBookPlayer::mp3.begin();
+	AudioBookPlayer::mp3.reset();
 	digitalWrite(PB3, LOW);
 	delay(500);
 
-	uint16_t volume = mp3.getVolume();
-	mp3.setVolume(24);
+	uint16_t volume = AudioBookPlayer::mp3.getVolume();
+	AudioBookPlayer::mp3.setVolume(24);
 	delay(30);
   
-	uint16_t count = mp3.getTotalTrackCount();
+	uint16_t count = AudioBookPlayer::mp3.getTotalTrackCount();
 
 	Player::playNextTrack();
 }
 
 void loop() {
 	if ( !Player::isSwitching ) {
-		mp3.loop();
+		AudioBookPlayer::mp3.loop();
 
 		int analogValue = analogRead(A3);
 
