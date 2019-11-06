@@ -5,9 +5,8 @@ DFMiniMp3<SoftwareSerial, Mp3Notify> AudioBookPlayer::mp3 = DFMiniMp3<SoftwareSe
 
 void setup() {
 	analogReference(DEFAULT);
-	
-  SSD1306.ssd1306_init();
-	SSD1306.ssd1306_fillscreen(0x00);
+
+	Display::init();
 
 	pinMode(A3, INPUT);
 	pinMode(PB3, OUTPUT);
@@ -32,34 +31,44 @@ void loop() {
 	if ( !Player::isSwitching ) {
 		AudioBookPlayer::mp3.loop();
 
-		int analogValue = analogRead(A3);
+		handleInput();
+	}
+}
 
-		uint16_t key = Input::getKeyPress(analogValue);
-		if ( !Input::isAnyKeyPressed && key > 0 ) {
-			SSD1306.ssd1306_setpos(3, 3);
-			if ( key == 1 ) {
-				Player::playPrevTrack();
-			}
-			else if ( key == 2 ) {
-				if ( Player::isPlaying ) {
-					Player::pause();
-					SSD1306.ssd1306_string_font6x8("Pausing");
-				}
-				else {
-					Player::resume();
-					SSD1306.ssd1306_string_font6x8("Resuming");
-				}
-			}
-			else if ( key == 3 ) {
-				Player::playNextTrack();
-			}
-			else if ( key == 4 ) {
-				SSD1306.ssd1306_string_font6x8("Button 4");
-			}
-			Input::isAnyKeyPressed = true;
+void handleInput() {
+	int analogValue = analogRead(A3);
+
+	uint16_t key = Input::getKeyPress(analogValue);
+	if ( !Input::isAnyKeyPressed && key > 0 ) {
+		SSD1306.ssd1306_setpos(3, 3);
+		if ( key == 1 ) {
+			Player::playPrevTrack();
 		}
-		else if ( Input::isAnyKeyPressed && key <= 0 ) {
-			Input::isAnyKeyPressed = false;
+		else if ( key == 2 ) {
+			if ( Player::isPlaying ) {
+				Player::pause();
+				SSD1306.ssd1306_string_font6x8("Pausing");
+			}
+			else {
+				Player::resume();
+				SSD1306.ssd1306_string_font6x8("Resuming");
+			}
 		}
+		else if ( key == 3 ) {
+			Player::playNextTrack();
+		}
+		else if ( key == 4 ) {
+			if ( Display::isTurnedOn ) {
+				Display::sleep();
+			}
+			else {
+				Display::wake();
+			}
+			SSD1306.ssd1306_string_font6x8("Button 4");
+		}
+		Input::isAnyKeyPressed = true;
+	}
+	else if ( Input::isAnyKeyPressed && key <= 0 ) {
+		Input::isAnyKeyPressed = false;
 	}
 }
