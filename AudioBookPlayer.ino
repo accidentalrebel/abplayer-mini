@@ -38,7 +38,6 @@
 /// ATTINY85
 #define RX PB4
 #define TX PB1
-SoftwareSerial Serial(RX, TX);
 
 #define SSD1306_SCL PB2	
 #define SSD1306_SDA	PB0
@@ -241,8 +240,6 @@ void setup() {
 
 	pinMode(A3, INPUT);
 	pinMode(PB3, OUTPUT);
-
-	Serial.begin(115200);
 
 	digitalWrite(PB3, HIGH);
 	delay(1000);
