@@ -16,13 +16,13 @@ void Input::loop() {
       timePressed = millis();
       pressedDuration = 0;
     }
+    else {
+      pressedDuration = millis() - timePressed;
+    }
   }
   else {
     releasedButton = pressedButton;
     pressedButton = 0;
-
-    SSD1306.ssd1306_setpos(4, 4);
-    pressedDuration = millis() - timePressed;
     timePressed = 0;
   }
 }

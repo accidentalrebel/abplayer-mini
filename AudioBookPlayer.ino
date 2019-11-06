@@ -1,5 +1,7 @@
 #include "AudioBookPlayer.h"
 
+bool needsReset = false;
+
 SoftwareSerial AudioBookPlayer::secondarySerial = SoftwareSerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> AudioBookPlayer::mp3 = DFMiniMp3<SoftwareSerial, Mp3Notify>(AudioBookPlayer::secondarySerial);
 
@@ -33,30 +35,39 @@ void loop() {
 		Input::loop();
 
 		SSD1306.ssd1306_setpos(3, 3);
-		if ( Input::releasedButton == 1 ) {
-			Player::playPrevTrack();
-		}
-		else if ( Input::releasedButton == 2 ) {
-			if ( Player::isPlaying ) {
-				Player::pause();
-				SSD1306.ssd1306_string_font6x8("Pausing");
-			}
-			else {
-				Player::resume();
-				SSD1306.ssd1306_string_font6x8("Resuming");
-			}
- 		}
-		else if ( Input::releasedButton == 3 ) {
-			Player::playNextTrack();
-		}
-		else if ( Input::releasedButton == 4 ) {
-			if ( Display::isTurnedOn && Input::pressedDuration >= 2000 ) {
+		if ( Input::pressedButton > 0 && Input::pressedDuration >= 2000 ) {
+			if ( Display::isTurnedOn ) {
 				Display::sleep();
+				needsReset = true;
 			}
-			else {
-				Display::wake();
+		}
+		else {
+			if ( needsReset ) {
+				needsReset = false;
+				return;
 			}
-			SSD1306.ssd1306_string_font6x8("Button 4");
+			if ( Input::releasedButton == 1 ) {
+				Player::playPrevTrack();
+			}
+			else if ( Input::releasedButton == 2 ) {
+				if ( Player::isPlaying ) {
+					Player::pause();
+					SSD1306.ssd1306_string_font6x8("Pausing");
+				}
+				else {
+					Player::resume();
+					SSD1306.ssd1306_string_font6x8("Resuming");
+				}
+			}
+			else if ( Input::releasedButton == 3 ) {
+				Player::playNextTrack();
+			}
+			else if ( Input::releasedButton == 4 ) {
+				if ( !Display::isTurnedOn ) {
+					Display::wake();
+				}
+				SSD1306.ssd1306_string_font6x8("Button 4");
+			}
 		}
 	}
 }
