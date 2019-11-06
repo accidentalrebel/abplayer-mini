@@ -38,8 +38,8 @@ static void Player::playCurrentTrack() {
   AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
   delay(300);
 
-  AudioBookPlayer::log("Playing ", true);
-  AudioBookPlayer::logInt(Player::playIndex);
+  Display::log("Playing ", true);
+  Display::logInt(Player::playIndex);
 
   isPlaying = true;
   isSwitching = false;

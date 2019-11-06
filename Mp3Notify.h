@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <ssd1306xled.h>
 #include "AudioBookPlayer.h"
+#include "Display.h"
 
 class Mp3Notify
 {

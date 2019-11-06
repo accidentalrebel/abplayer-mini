@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "AudioBookPlayer.h"
+#include "Display.h"
 
 class Player {
  public:
