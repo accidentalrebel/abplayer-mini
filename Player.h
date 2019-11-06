@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <stdint.h>
+#include "AudioBookPlayer.h"
 
 class Player {
  public:
