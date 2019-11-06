@@ -30,21 +30,13 @@ void setup() {
 void loop() {
 	if ( !Player::isSwitching ) {
 		AudioBookPlayer::mp3.loop();
+		Input::loop();
 
-		handleInput();
-	}
-}
-
-void handleInput() {
-	int analogValue = analogRead(A3);
-
-	uint16_t key = Input::getKeyPress(analogValue);
-	if ( !Input::isAnyKeyPressed && key > 0 ) {
 		SSD1306.ssd1306_setpos(3, 3);
-		if ( key == 1 ) {
+		if ( Input::releasedButton == 1 ) {
 			Player::playPrevTrack();
 		}
-		else if ( key == 2 ) {
+		else if ( Input::releasedButton == 2 ) {
 			if ( Player::isPlaying ) {
 				Player::pause();
 				SSD1306.ssd1306_string_font6x8("Pausing");
@@ -53,11 +45,11 @@ void handleInput() {
 				Player::resume();
 				SSD1306.ssd1306_string_font6x8("Resuming");
 			}
-		}
-		else if ( key == 3 ) {
+ 		}
+		else if ( Input::releasedButton == 3 ) {
 			Player::playNextTrack();
 		}
-		else if ( key == 4 ) {
+		else if ( Input::releasedButton == 4 ) {
 			if ( Display::isTurnedOn ) {
 				Display::sleep();
 			}
@@ -66,9 +58,5 @@ void handleInput() {
 			}
 			SSD1306.ssd1306_string_font6x8("Button 4");
 		}
-		Input::isAnyKeyPressed = true;
-	}
-	else if ( Input::isAnyKeyPressed && key <= 0 ) {
-		Input::isAnyKeyPressed = false;
 	}
 }

@@ -6,9 +6,13 @@
 
 class Input {
  public:
-  static bool isAnyKeyPressed;
-  static uint16_t getKeyPress(int analogValue);
-  static bool detectKeyPress(int readValue, float voltageDrop);
+  static uint16_t pressedButton;
+  static uint16_t releasedButton;
+  static bool isAnyButtonPressed;
+  static void loop();
+  static bool onButtonReleased(uint16_t buttonNumber);
+  static uint16_t getButtonPress(int analogValue);
+  static bool detectButtonPress(int readValue, float voltageDrop);
 };
 
 #endif

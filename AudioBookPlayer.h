@@ -9,11 +9,11 @@
 #include "Mp3Notify.h"
 
 #define V_NOMINAL 3.7
-#define V_DROP_1 1.4567
+#define V_DROP_1 1.589
 #define V_DROP_2 0.8297
 #define V_DROP_3 0.3947
 #define V_DROP_4 0.1877
-#define ALLOWANCE 30
+#define ALLOWANCE 40
 
 #define IS_ATTINY_85 true
 
