@@ -16,6 +16,10 @@ class Player {
   static void playCurrentTrack();
   static void resume();
   static void pause();
+  static void setVolume(uint8_t vol);
+  static uint8_t getVolume();
+  static void decreaseVolume();
+  static void increaseVolume();
 };
 
 #endif

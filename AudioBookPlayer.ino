@@ -19,8 +19,7 @@ void setup() {
 	AudioBookPlayer::mp3.reset();
 	digitalWrite(PB3, LOW);
 	delay(500);
-
-	AudioBookPlayer::mp3.setVolume(30);
+	Player::setVolume(30);
 	delay(30);
   
 	uint16_t count = AudioBookPlayer::mp3.getTotalTrackCount();
@@ -33,10 +32,25 @@ void loop() {
 		AudioBookPlayer::mp3.loop();
 		Input::loop();
 
+		SSD1306.ssd1306_setpos(2, 2);
+		Display::logInt(Input::pressedButton, false);
+
 		SSD1306.ssd1306_setpos(3, 3);
-		if ( Input::pressedButton > 0 && Input::pressedDuration >= 2000 ) {
-			if ( Display::isTurnedOn ) {
-				Display::sleep();
+		if ( Input::pressedButton > 0 ) {
+			if ( !needsReset && Input::pressedDuration >= 1000 ) {
+				if ( Input::pressedButton ==  1 ) {
+					Player::decreaseVolume();
+					Display::log("decreased volume to ");
+					Display::logInt(Player::getVolume());
+				}
+				else if ( Input::pressedButton == 3 ) {
+					Player::increaseVolume();
+					Display::log("Increased volume to ");
+					Display::logInt(Player::getVolume());
+				}
+				else if ( Input::pressedButton == 4 && Display::isTurnedOn ) {
+					Display::sleep();
+				}
 				needsReset = true;
 			}
 		}
@@ -51,11 +65,11 @@ void loop() {
 			else if ( Input::releasedButton == 2 ) {
 				if ( Player::isPlaying ) {
 					Player::pause();
-					SSD1306.ssd1306_string_font6x8("Pausing");
+					Display::log("Pausing");
 				}
 				else {
 					Player::resume();
-					SSD1306.ssd1306_string_font6x8("Resuming");
+					Display::log("Resuming");
 				}
 			}
 			else if ( Input::releasedButton == 3 ) {
@@ -65,7 +79,7 @@ void loop() {
 				if ( !Display::isTurnedOn ) {
 					Display::wake();
 				}
-				SSD1306.ssd1306_string_font6x8("Button 4");
+				Display::log("Button 4");
 			}
 		}
 	}

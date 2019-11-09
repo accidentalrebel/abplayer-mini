@@ -62,3 +62,28 @@ static void Player::pause() {
   AudioBookPlayer::mp3.pause();
   isPlaying = false;
 }
+
+static void Player::setVolume(uint8_t val) {
+  if ( val > 30 ) {
+    val = 30;
+  }
+  AudioBookPlayer::mp3.setVolume(val);
+}
+
+static uint8_t Player::getVolume() {
+  return AudioBookPlayer::mp3.getVolume();
+}
+
+static void Player::decreaseVolume() {
+  uint8_t currentVolume = getVolume();
+  setVolume(currentVolume - 5);
+}
+
+static void Player::increaseVolume() {
+  uint8_t currentVolume = getVolume();
+  setVolume(currentVolume + 5);
+}
+
+
+
+
