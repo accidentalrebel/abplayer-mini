@@ -7,6 +7,7 @@ Still under heavy development.
 
 ## Details
   * The code runs on an ATTiny85 microcontroller
+  * Uses the [DFMiniMp3 library](https://github.com/Makuna/DFMiniMp3) by Makuna
   * The ATTiny85 communicates with the DFPlayer Mini module using SoftwareSerial
   * The SSD1306 LCD Display is used mostly for debugging 
   * The hardware has 4 buttons each has a short and long press inputs:
