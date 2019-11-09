@@ -20,8 +20,7 @@ void setup() {
 	digitalWrite(PB3, LOW);
 	delay(500);
 
-	uint16_t volume = AudioBookPlayer::mp3.getVolume();
-	AudioBookPlayer::mp3.setVolume(24);
+	AudioBookPlayer::mp3.setVolume(30);
 	delay(30);
   
 	uint16_t count = AudioBookPlayer::mp3.getTotalTrackCount();

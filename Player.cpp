@@ -9,7 +9,7 @@ static void Player::playNextTrack() {
     return;
   }
   playIndex++;
-  if ( playIndex > 3 ) {
+  if ( playIndex > 4 ) {
     playIndex = 1;
   }
 
@@ -22,7 +22,7 @@ static void Player::playPrevTrack() {
   }
   playIndex--;
   if ( playIndex < 1 ) {
-    playIndex = 3;
+    playIndex = 4u;
   }
 
   playCurrentTrack();
