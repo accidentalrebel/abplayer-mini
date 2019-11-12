@@ -12,13 +12,13 @@ void setup() {
 	Display::init();
 
 	pinMode(A3, INPUT);
-	pinMode(PB3, OUTPUT);
+	//pinMode(PB3, OUTPUT);
 
-	digitalWrite(PB3, HIGH);
+	//digitalWrite(PB3, HIGH);
 	delay(1000);
 	AudioBookPlayer::mp3.begin();
 	AudioBookPlayer::mp3.reset();
-	digitalWrite(PB3, LOW);
+	//digitalWrite(PB3, LOW);
 	delay(500);
 	Player::setVolume(30);
 	delay(30);
@@ -34,11 +34,16 @@ void loop() {
 		Input::loop();
 
 		SSD1306.ssd1306_setpos(2, 2);
-		Display::logInt(Input::pressedButton, false);
+		Display::logInt(Input::pressedButton, true);
 
-		/* SSD1306.ssd1306_setpos(6, 6); */
-		/* Display::logInt(analogRead(A3)); */
-		/* return; */
+		SSD1306.ssd1306_setpos(5, 5);
+		float button = ((analogRead(A3)*5)+512)/1024;
+		Display::logInt(button);
+
+		SSD1306.ssd1306_setpos(6, 6);
+		Display::logInt(analogRead(A3));
+		delay(500);
+		return;
 
 		SSD1306.ssd1306_setpos(3, 3);
 		if ( Input::pressedButton > 0 ) {

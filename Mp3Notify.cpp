@@ -7,7 +7,7 @@ static void Mp3Notify::OnError(uint16_t errorCode)
   Display::log("Error ", true);
   Display::logInt(errorCode);
 
-  digitalWrite(PB3, HIGH);
+  //digitalWrite(PB3, HIGH);
 }
 
 static void Mp3Notify::OnPlayFinished(uint16_t globalTrack)
