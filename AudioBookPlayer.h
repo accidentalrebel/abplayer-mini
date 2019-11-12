@@ -8,13 +8,6 @@
 #include "Player.h"
 #include "Mp3Notify.h"
 
-#define V_NOMINAL 3.7
-#define V_DROP_1 1.589
-#define V_DROP_2 0.838
-#define V_DROP_3 0.383
-#define V_DROP_4 0.183
-#define ALLOWANCE 40
-
 #define IS_ATTINY_85 true
 
 #if IS_ATTINY_85 == true

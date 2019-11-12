@@ -7,8 +7,7 @@ unsigned long Input::timePressed = 0;
 unsigned long Input::pressedDuration = 0;
 
 void Input::loop() {
-  int analogValue = analogRead(A3);
-  uint16_t button = Input::getButtonPress(analogValue);
+  uint16_t button = Input::getButtonPress();
   if ( button > 0 ) {
     pressedButton = button;
 
@@ -27,26 +26,25 @@ void Input::loop() {
   }
 }
 
-uint16_t Input::getButtonPress(int analogValue) {
-  if ( Input::detectButtonPress(analogValue, V_DROP_1)	) {
+uint16_t Input::getButtonPress() {
+  if ( Input::detectButtonPress(1) ) {
     return 1;
   }
-  else if ( Input::detectButtonPress(analogValue, V_DROP_2)	) {
+  else if ( Input::detectButtonPress(2)	) {
     return 2;
   }
-  else if ( Input::detectButtonPress(analogValue, V_DROP_3)	) {
+  else if ( Input::detectButtonPress(3)	) {
     return 3;
   }
-  else if ( Input::detectButtonPress(analogValue, V_DROP_4)	) {
+  else if ( Input::detectButtonPress(4)	) {
     return 4;
   }
   return 0;
 }
 	
-bool Input::detectButtonPress(int readValue, float voltageDrop) {
-  float change = voltageDrop / V_NOMINAL;
-  float computed = 1023 * change;
-  if ( readValue > 20 && readValue >= computed - ALLOWANCE && readValue <= computed + ALLOWANCE ) {
+bool Input::detectButtonPress(int buttonToCheck) {
+  int pressed = ceil(((analogRead(A3)*5)+512)/1024) + 1;
+  if ( pressed == buttonToCheck ) {
     return true;
   }
   return false;

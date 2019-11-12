@@ -34,16 +34,15 @@ void loop() {
 		Input::loop();
 
 		SSD1306.ssd1306_setpos(2, 2);
-		Display::logInt(Input::pressedButton, true);
+		Display::logInt(Input::pressedButton, false);
 
-		SSD1306.ssd1306_setpos(5, 5);
-		float button = ((analogRead(A3)*5)+512)/1024;
-		Display::logInt(button);
-
-		SSD1306.ssd1306_setpos(6, 6);
-		Display::logInt(analogRead(A3));
-		delay(500);
-		return;
+		/* SSD1306.ssd1306_setpos(5, 5); */
+		/* float button = ceil(((analogRead(A3)*5)+512)/1024); */
+		/* Display::logInt(button); */
+		/* SSD1306.ssd1306_setpos(6, 6); */
+		/* Display::logInt(analogRead(A3)); */
+		/* delay(500); */
+		/* return; */
 
 		SSD1306.ssd1306_setpos(3, 3);
 		if ( Input::pressedButton > 0 ) {

@@ -13,8 +13,8 @@ class Input {
   static bool isAnyButtonPressed;
   static void loop();
   static bool onButtonReleased(uint16_t buttonNumber);
-  static uint16_t getButtonPress(int analogValue);
-  static bool detectButtonPress(int readValue, float voltageDrop);
+  static uint16_t getButtonPress();
+  static bool detectButtonPress(int buttonToCheck);
 };
 
 #endif
