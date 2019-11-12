@@ -36,9 +36,8 @@ void loop() {
 		SSD1306.ssd1306_setpos(2, 2);
 		Display::logInt(Input::pressedButton, false);
 
-		/* SSD1306.ssd1306_setpos(6, 6);			 */
+		/* SSD1306.ssd1306_setpos(6, 6); */
 		/* Display::logInt(analogRead(A3)); */
-		/* delay(500); */
 		/* return; */
 
 		SSD1306.ssd1306_setpos(3, 3);
@@ -54,7 +53,6 @@ void loop() {
 					Display::log("Increased volume to ");
 					Display::logInt(Player::getVolume());
 				}
-
 				else if ( Input::pressedButton == 4 && Display::isTurnedOn ) {
 					Display::sleep();
 				}
