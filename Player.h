@@ -14,6 +14,8 @@ class Player {
   static void playNextTrack();
   static void playPrevTrack();
   static void playCurrentTrack();
+  static void sleep();
+  static void wake();
   static void resume();
   static void pause();
   static void setVolume(uint8_t vol);

@@ -45,6 +45,17 @@ static void Player::playCurrentTrack() {
   isSwitching = false;
 }
 
+static void Player::sleep() {
+  if ( isPlaying ) {
+    pause();
+  }
+  AudioBookPlayer::mp3.sleep();
+}
+
+static void Player::wake() {
+  AudioBookPlayer::mp3.setPlaybackSource(DfMp3_PlaySource_Sd);
+}
+
 static void Player::resume() {
   if ( isPlaying ) {
     return;

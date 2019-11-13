@@ -4,10 +4,8 @@ static void Mp3Notify::OnError(uint16_t errorCode)
 {
   // see DfMp3_Error for code meaning
   SSD1306.ssd1306_setpos(3, 0);
-  Display::log("Error ", true);
+  Display::log("Error ");
   Display::logInt(errorCode);
-
-  //digitalWrite(PB3, HIGH);
 }
 
 static void Mp3Notify::OnPlayFinished(uint16_t globalTrack)

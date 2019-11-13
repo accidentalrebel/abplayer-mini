@@ -4,6 +4,8 @@
 #include <SoftwareSerial.h>
 #include <DFMiniMp3.h>
 #include <ssd1306xled.h>
+#include <avr/sleep.h>
+#include <avr/interrupt.h>
 #include "Input.h"
 #include "Player.h"
 #include "Mp3Notify.h"
