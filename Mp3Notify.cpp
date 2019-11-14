@@ -15,7 +15,7 @@ static void Mp3Notify::OnPlayFinished(uint16_t globalTrack)
   Display::logInt(globalTrack);
   Display::log(".");
 
-  Player::playNextTrack();
+  Player::onPlayFinished();
 }
 
 static void Mp3Notify::OnCardOnline(uint16_t code)

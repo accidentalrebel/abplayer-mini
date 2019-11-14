@@ -2,7 +2,23 @@
 
 bool Player::isPlaying = false;
 bool Player::isSwitching = false;
-uint16_t Player::playIndex = 0;
+uint8_t Player::playIndex = 0;
+bool Player::onPlayFinishedTrigger = false;
+
+/*
+ * According to the documentation OnPlayFinished is called twice.
+ * So we use onPlayFinishedTrigger to make sure we only play the
+ * next track on the second time onPlayFinished is called.
+ */
+static void Player::onPlayFinished() {
+  if ( !onPlayFinishedTrigger ) {
+    onPlayFinishedTrigger = true;
+    return;
+  }
+
+  playNextTrack();
+  onPlayFinishedTrigger = false;
+}
 
 static void Player::playNextTrack() {
   if ( isSwitching ) {
@@ -13,6 +29,7 @@ static void Player::playNextTrack() {
     playIndex = 1;
   }
 
+  //AudioBookPlayer::mp3.nextTrack();
   playCurrentTrack();
 }
 
@@ -25,18 +42,14 @@ static void Player::playPrevTrack() {
     playIndex = 4u;
   }
 
+  //AudioBookPlayer::mp3.prevTrack();
   playCurrentTrack();
 }
 
 static void Player::playCurrentTrack() {
   isSwitching = true;
 
-  //The delays and AudioBookPlayer::mp3.stop() helped fixed the COM 131 error.
-  delay(30);
-  AudioBookPlayer::mp3.stop();
-  delay(30);
-  AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
-  delay(300);
+  AudioBookPlayer::mp3.nextTrack();
 
   Display::log("Playing ", true);
   Display::logInt(Player::playIndex);

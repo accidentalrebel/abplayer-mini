@@ -7,10 +7,12 @@
 
 class Player {
  public:
-  static uint16_t playIndex;	
+  static uint8_t playIndex;	
   static bool isSwitching;
   static bool isPlaying;
-	
+  static bool onPlayFinishedTrigger;
+
+  static void onPlayFinished();
   static void playNextTrack();
   static void playPrevTrack();
   static void playCurrentTrack();

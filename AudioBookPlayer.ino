@@ -8,22 +8,18 @@ SoftwareSerial AudioBookPlayer::secondarySerial = SoftwareSerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> AudioBookPlayer::mp3 = DFMiniMp3<SoftwareSerial, Mp3Notify>(AudioBookPlayer::secondarySerial);
 
 void setup() {
-	analogReference(DEFAULT);
-
 	Display::init();
 
-	pinMode(A3, INPUT);
-
-	delay(1000);
 	AudioBookPlayer::mp3.begin();
-	AudioBookPlayer::mp3.reset();
-	delay(500);
-	Player::setVolume(30);
-	delay(30);
-  
-	uint16_t count = AudioBookPlayer::mp3.getTotalTrackCount();
+	//AudioBookPlayer::mp3.reset();
+	Player::setVolume(15);
+
+	delay(3000);
 
 	Player::playNextTrack();
+
+	analogReference(DEFAULT);
+	pinMode(A3, INPUT);
 }
 
 void sleep() {
