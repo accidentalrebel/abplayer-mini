@@ -11,10 +11,9 @@ void setup() {
 	Display::init();
 
 	AudioBookPlayer::mp3.begin();
-	//AudioBookPlayer::mp3.reset();
 	Player::setVolume(15);
 
-	delay(3000);
+	delay(1000);
 
 	Player::playNextTrack();
 

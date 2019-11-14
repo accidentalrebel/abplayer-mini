@@ -49,7 +49,7 @@ static void Player::playPrevTrack() {
 static void Player::playCurrentTrack() {
   isSwitching = true;
 
-  AudioBookPlayer::mp3.nextTrack();
+  AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 
   Display::log("Playing ", true);
   Display::logInt(Player::playIndex);
