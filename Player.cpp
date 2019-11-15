@@ -29,7 +29,6 @@ static void Player::playNextTrack() {
     playIndex = 1;
   }
 
-  //AudioBookPlayer::mp3.nextTrack();
   playCurrentTrack();
 }
 
@@ -42,7 +41,6 @@ static void Player::playPrevTrack() {
     playIndex = 4u;
   }
 
-  //AudioBookPlayer::mp3.prevTrack();
   playCurrentTrack();
 }
 

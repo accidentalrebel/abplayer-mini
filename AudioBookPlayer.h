@@ -8,6 +8,7 @@
 #include <avr/interrupt.h>
 #include "Input.h"
 #include "Player.h"
+#include "System.h"
 #include "Mp3Notify.h"
 
 #define IS_ATTINY_85 true
