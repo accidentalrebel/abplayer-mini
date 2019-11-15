@@ -1,36 +1,29 @@
 #include "System.h"
 
-bool System::canSleep = false;
 bool System::isSleeping = false;
+bool System::canSleep = false;
 
 void System::loop() {
   Input::loop();
 
-  if ( !isSleeping ) {
+  if ( !isSleeping ){ 
     AudioBookPlayer::mp3.loop();
     
     if ( Input::pressedButton == 2 && Input::pressedDuration >= 1000 ) {
       Display::sleep();
       canSleep = true;
     }
-    else if ( Input::releasedButton == 2 && canSleep ) {
-      sleep();
+    else if ( canSleep && Input::releasedButton == 2 ) {
       canSleep = false;
+      sleep();
     }
-  }
-  else {
-    Display::log("Waking Player");
-    Player::wake();
-    delay(5000);
-	
-    Display::log("Awoken Player");
-    delay(1000);
-				
-    isSleeping = false;
   }
 }
 
 void System::sleep() {
+  if ( isSleeping ) {
+    return;
+  }
   isSleeping = true;
 	
   SSD1306.ssd1306_setpos(1, 1);
@@ -55,9 +48,12 @@ void System::sleep() {
   sei(); // Enable interrupts
 
   Display::wake();
+  Player::wake();
 	
   SSD1306.ssd1306_setpos(1, 1);
   Display::log("Awake");
+
+  isSleeping = false;
 }
 
 /* ISR(PCINT0_vect) { } */ 

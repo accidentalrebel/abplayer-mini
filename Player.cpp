@@ -65,6 +65,9 @@ static void Player::sleep() {
 
 static void Player::wake() {
   AudioBookPlayer::mp3.setPlaybackSource(DfMp3_PlaySource_Sd);
+  delay(1000);
+
+  playCurrentTrack();
 }
 
 static void Player::resume() {

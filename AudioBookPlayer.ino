@@ -36,27 +36,28 @@ void loop() {
 
 	SSD1306.ssd1306_setpos(3, 3);
 	
-	if ( Input::pressedButton > 0 ) {
-		if ( !needsReset && Input::pressedDuration >= 1000 ) {
-			if ( Input::pressedButton ==  1 ) {
-				Player::decreaseVolume();
-				Display::log("decreased volume to ");
-				Display::logInt(Player::getVolume());
-			}
-			else if ( Input::pressedButton == 3 ) {
-				Player::increaseVolume();
-				Display::log("Increased volume to ");
-				Display::logInt(Player::getVolume());
-			}
-			else if ( Input::pressedButton == 4 && Display::isTurnedOn ) {
-				Display::sleep();
-			}
-			needsReset = true;
+	if ( Input::pressedButton > 0 && !needsReset && Input::pressedDuration >= 1000) {
+		if ( Input::pressedButton ==  1 ) {
+			Player::decreaseVolume();
+			Display::log("decreased volume to ");
+			Display::logInt(Player::getVolume());
 		}
+		else if ( Input::pressedButton == 3 ) {
+			Player::increaseVolume();
+			Display::log("Increased volume to ");
+			Display::logInt(Player::getVolume());
+		}
+		else if ( Input::pressedButton == 4 && Display::isTurnedOn ) {
+			Display::sleep();
+		}
+		needsReset = true;
 	}
 	else if ( Input::releasedButton > 0 ) {
 		if ( needsReset ) {
 			needsReset = false;
+			return;
+		}
+		if ( Input::pressedDuration >= 1000 ) {
 			return;
 		}
 		if ( Input::releasedButton == 1 ) {
