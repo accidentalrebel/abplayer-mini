@@ -31,21 +31,17 @@ void loop() {
 		return;
 	}
 
-	SSD1306.ssd1306_setpos(2, 2);
-	Display::logInt(Input::pressedButton, false);
+	/* SSD1306.ssd1306_setpos(3, 7); */
+	/* Display::logInt(Input::pressedButton, false); */
 
-	SSD1306.ssd1306_setpos(3, 3);
+	SSD1306.ssd1306_setpos(3, 7);
 	
 	if ( Input::pressedButton > 0 && !needsReset && Input::pressedDuration >= 1000) {
 		if ( Input::pressedButton ==  1 ) {
 			Player::decreaseVolume();
-			Display::log("decreased volume to ");
-			Display::logInt(Player::getVolume());
 		}
 		else if ( Input::pressedButton == 3 ) {
 			Player::increaseVolume();
-			Display::log("Increased volume to ");
-			Display::logInt(Player::getVolume());
 		}
 		else if ( Input::pressedButton == 4 && Display::isTurnedOn ) {
 			Display::sleep();
@@ -66,11 +62,11 @@ void loop() {
 		else if ( Input::releasedButton == 2 ) {
 			if ( Player::isPlaying ) {
 				Player::pause();
-				Display::log("Pausing");
+				Display::log("> Pausing");
 			}
 			else {
 				Player::resume();
-				Display::log("Resuming");
+				Display::log("> Resuming");
 			}
 		}
 		else if ( Input::releasedButton == 3 ) {
@@ -80,7 +76,6 @@ void loop() {
 			if ( !Display::isTurnedOn ) {
 				Display::wake();
 			}
-			Display::log("Button 4");
 		}
 	}
 }

@@ -49,7 +49,8 @@ static void Player::playCurrentTrack() {
 
   AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 
-  Display::log("Playing ", true);
+  SSD1306.ssd1306_setpos(3, 7);
+  Display::log("> Playing ");
   Display::logInt(Player::playIndex);
 
   isPlaying = true;
@@ -93,6 +94,7 @@ static void Player::setVolume(uint8_t val) {
     val = 30;
   }
   AudioBookPlayer::mp3.setVolume(val);
+  Display::onUpdatedVolume(val);
 }
 
 static uint8_t Player::getVolume() {

@@ -26,8 +26,8 @@ void System::sleep() {
   }
   isSleeping = true;
 	
-  SSD1306.ssd1306_setpos(1, 1);
-  Display::log("Sleep");
+  SSD1306.ssd1306_setpos(3, 7);
+  Display::log("> Sleep");
 
   Display::sleep();
   Player::sleep();
@@ -50,8 +50,8 @@ void System::sleep() {
   Display::wake();
   Player::wake();
 	
-  SSD1306.ssd1306_setpos(1, 1);
-  Display::log("Awake");
+  SSD1306.ssd1306_setpos(3, 7);
+  Display::log("> Awake");
 
   isSleeping = false;
 }
