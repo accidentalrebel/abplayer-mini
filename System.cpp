@@ -4,15 +4,34 @@ bool System::canSleep = false;
 bool System::isSleeping = false;
 
 void System::loop() {
-  if ( !System::isSleeping ) {
-    AudioBookPlayer::mp3.loop();
-  }
-
   Input::loop();
+
+  if ( !isSleeping ) {
+    AudioBookPlayer::mp3.loop();
+    
+    if ( Input::pressedButton == 2 && Input::pressedDuration >= 1000 ) {
+      Display::sleep();
+      canSleep = true;
+    }
+    else if ( Input::releasedButton == 2 && canSleep ) {
+      sleep();
+      canSleep = false;
+    }
+  }
+  else {
+    Display::log("Waking Player");
+    Player::wake();
+    delay(5000);
+	
+    Display::log("Awoken Player");
+    delay(1000);
+				
+    isSleeping = false;
+  }
 }
 
 void System::sleep() {
-  System::isSleeping = true;
+  isSleeping = true;
 	
   SSD1306.ssd1306_setpos(1, 1);
   Display::log("Sleep");

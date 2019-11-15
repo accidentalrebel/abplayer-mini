@@ -6,8 +6,8 @@
 #include "Input.h"
 
 class System {
- public:
   static bool canSleep;
+public:
   static bool isSleeping;
   static void sleep();
   static void loop();
