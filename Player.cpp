@@ -38,7 +38,7 @@ static void Player::playPrevTrack() {
   }
   playIndex--;
   if ( playIndex < 1 ) {
-    playIndex = 4u;
+    playIndex = 4;
   }
 
   playCurrentTrack();
