@@ -50,10 +50,9 @@ void Display::onUpdateMessageNum(uint16_t num, bool canClear = false) {
   ssd1306tx_numdec(num);
 }
 
-void Display::onUpdateCurrentPlayed(uint8_t folderNum, uint8_t trackNum) {
+void Display::onUpdateCurrentPlayed(uint8_t trackNum) {
   ssd1306_setpos(5, 3);
-  ssd1306tx_numdec(folderNum);
-  ssd1306tx_string(" - ");
+  ssd1306tx_string("Track ");
   ssd1306tx_numdec(trackNum);
 }
 

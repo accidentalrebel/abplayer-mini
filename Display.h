@@ -18,7 +18,7 @@ class Display {
   static void logInt(uint16_t val, bool canClear = false);
   static void onUpdateMessage(char* message, bool canClear = false);
   static void onUpdateMessageNum(uint16_t num, bool canClear = false);
-  static void onUpdateCurrentPlayed(uint8_t folderNum, uint8_t trackNum);
+  static void onUpdateCurrentPlayed(uint8_t trackNum);
   static void onUpdatedVolume(uint16_t vol);
   static void clearLine(uint8_t lineNum);
 };

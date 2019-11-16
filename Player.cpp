@@ -4,7 +4,6 @@ bool Player::isPlaying = false;
 bool Player::isSwitching = false;
 bool Player::onPlayFinishedTrigger = false;
 uint8_t Player::playIndex = 0;
-uint8_t Player::folderIndex = 1;
 
 /*
  * According to the documentation OnPlayFinished is called twice.
@@ -25,11 +24,8 @@ static void Player::playNextTrack() {
   if ( isSwitching ) {
     return;
   }
-  if ( playIndex < AudioBookPlayer::mp3.getFolderTrackCount(folderIndex) ) {
-    playIndex++;
-  }
-  else {
-    folderIndex++;
+  playIndex++;
+  if ( playIndex > AudioBookPlayer::mp3.getTotalTrackCount()) {
     playIndex = 1;
   }
   
@@ -41,12 +37,9 @@ static void Player::playPrevTrack() {
     return;
   }
 
-  if ( playIndex < 2 ) {
-    playIndex--;
-  }
-  else {
-    folderIndex--;
-    playIndex = AudioBookPlayer::mp3.getFolderTrackCount(folderIndex);
+  playIndex--;
+  if ( playIndex < 1 ) {
+    playIndex = AudioBookPlayer::mp3.getTotalTrackCount();
   }
 
   playCurrentTrack();
@@ -55,8 +48,8 @@ static void Player::playPrevTrack() {
 static void Player::playCurrentTrack() {
   isSwitching = true;
 
-  AudioBookPlayer::mp3.playFolderTrack(Player::folderIndex, Player::playIndex);
-  Display::onUpdateCurrentPlayed(Player::folderIndex, Player::playIndex);
+  AudioBookPlayer::mp3.playGlobalTrack(Player::playIndex);
+  Display::onUpdateCurrentPlayed(Player::playIndex);
 
   isPlaying = true;
   isSwitching = false;
