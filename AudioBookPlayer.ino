@@ -75,6 +75,9 @@ void loop() {
 			if ( !Display::isTurnedOn ) {
 				Display::wake();
 			}
+			else {
+				Player::toggleMode();
+			}
 		}
 	}
 }

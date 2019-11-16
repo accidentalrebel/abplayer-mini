@@ -39,7 +39,7 @@ void Display::wake() {
 
 void Display::setupMessage(bool canClear) {
   if ( canClear ) {
-    Display::clearLine(7);
+    clearLine(7);
     ssd1306_setpos(5, 7);
   }
 }
@@ -49,12 +49,18 @@ void Display::onUpdateMessage(char* message, bool canClear = false) {
   ssd1306tx_string(message);
 }
 
+void Display::onUpdatedMode(char* mode) {
+  clearLine(2);
+  ssd1306_setpos(5, 2);
+  ssd1306tx_string(mode);
+}
+
 void Display::onUpdateMessageNum(uint16_t num, bool canClear = false) {
   setupMessage(canClear);
   ssd1306tx_numdec(num);
 }
 
-void Display::onUpdateCurrentPlayed(uint8_t trackNum) {
+void Display::onUpdateCurrentPlayed(uint16_t trackNum) {
   ssd1306_setpos(5, 3);
   ssd1306tx_string("Track ");
   ssd1306tx_numdec(trackNum);

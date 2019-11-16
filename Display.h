@@ -16,10 +16,13 @@ class Display {
   static void wake();
   static void log(char* log, bool canClear = false);
   static void logInt(uint16_t val, bool canClear = false);
+  
+  static void onUpdatedMode(char* mode);
   static void onUpdateMessage(char* message, bool canClear = false);
   static void onUpdateMessageNum(uint16_t num, bool canClear = false);
-  static void onUpdateCurrentPlayed(uint8_t trackNum);
+  static void onUpdateCurrentPlayed(uint16_t trackNum);
   static void onUpdatedVolume(uint16_t vol);
+  
   static void clearLine(uint8_t lineNum);
 };
 

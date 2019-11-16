@@ -1,9 +1,13 @@
 #include "Player.h"
 
+#define SEEK_JUMP_COUNT 20;
+
 bool Player::isPlaying = false;
 bool Player::isSwitching = false;
+bool Player::isSeekMode = false;
 bool Player::onPlayFinishedTrigger = false;
-uint8_t Player::playIndex = 0;
+
+uint16_t Player::playIndex = 0;
 
 /*
  * According to the documentation OnPlayFinished is called twice.
@@ -16,32 +20,47 @@ static void Player::onPlayFinished() {
     return;
   }
 
-  playNextTrack();
+  playNextTrack(false);
   onPlayFinishedTrigger = false;
 }
 
-static void Player::playNextTrack() {
+static void Player::playNextTrack(bool canSeek = true) {
   if ( isSwitching ) {
     return;
   }
-  playIndex++;
-  if ( playIndex > AudioBookPlayer::mp3.getTotalTrackCount()) {
+  uint8_t jumpAmount = 1;
+  if ( canSeek && isSeekMode ) {
+    jumpAmount = SEEK_JUMP_COUNT;
+  }
+  if ( playIndex + jumpAmount > AudioBookPlayer::mp3.getTotalTrackCount() ) {
     playIndex = 1;
   }
-  
+  else {
+    playIndex += jumpAmount;
+  }
+
+  resetMode();
   playCurrentTrack();
 }
 
-static void Player::playPrevTrack() {
+static void Player::playPrevTrack(bool canSeek = true) {
   if ( isSwitching ) {
     return;
   }
 
-  playIndex--;
-  if ( playIndex < 1 ) {
-    playIndex = AudioBookPlayer::mp3.getTotalTrackCount();
+  uint8_t jumpAmount = 1;
+  if ( canSeek && isSeekMode ) {
+    jumpAmount = SEEK_JUMP_COUNT;
   }
 
+  if ( playIndex - jumpAmount <= 0 || playIndex < jumpAmount ) {
+    playIndex = AudioBookPlayer::mp3.getTotalTrackCount();
+  }
+  else {
+    playIndex -= jumpAmount;
+  }
+
+  resetMode();
   playCurrentTrack();
 }
 
@@ -107,6 +126,21 @@ static void Player::decreaseVolume() {
 static void Player::increaseVolume() {
   uint8_t currentVolume = getVolume();
   setVolume(currentVolume + 5);
+}
+
+static void Player::toggleMode() {
+  if( isSeekMode ) {
+    resetMode();
+  }
+  else {
+    isSeekMode = true;
+    Display::onUpdatedMode("Seek");
+  }
+}
+
+static void Player::resetMode() {
+  isSeekMode = false;
+  Display::onUpdatedMode("Normal");
 }
 
 

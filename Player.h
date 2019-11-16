@@ -9,14 +9,15 @@
 
 class Player {
  public:
-  static uint8_t playIndex;
+  static uint16_t playIndex;
   static bool isSwitching;
   static bool isPlaying;
   static bool onPlayFinishedTrigger;
+  static bool isSeekMode;
 
   static void onPlayFinished();
-  static void playNextTrack();
-  static void playPrevTrack();
+  static void playNextTrack(bool canSeek = true);
+  static void playPrevTrack(bool canSeek = true);
   static void playCurrentTrack();
   static void sleep();
   static void wake();
@@ -26,6 +27,8 @@ class Player {
   static uint8_t getVolume();
   static void decreaseVolume();
   static void increaseVolume();
+  static void toggleMode();
+  static void resetMode();
 };
 
 #endif
