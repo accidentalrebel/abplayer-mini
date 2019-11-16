@@ -2,7 +2,9 @@
 #define DISPLAY_H
 
 #include <stdint.h>
+#include <font6x8.h>
 #include <ssd1306xled.h>
+#include <ssd1306xledtx.h>
 
 class Display {
   static char* convertInt(uint16_t val);

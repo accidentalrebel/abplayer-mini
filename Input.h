@@ -2,6 +2,7 @@
 #define INPUT_H
 
 #include <stdint.h>
+#include <Arduino.h>
 #include "AudioBookPlayer.h"
 
 class Input {

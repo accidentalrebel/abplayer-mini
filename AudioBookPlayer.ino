@@ -2,7 +2,6 @@
 
 bool needsReset = false;
 
-
 SoftwareSerial AudioBookPlayer::secondarySerial = SoftwareSerial(RX, TX);
 DFMiniMp3<SoftwareSerial, Mp3Notify> AudioBookPlayer::mp3 = DFMiniMp3<SoftwareSerial, Mp3Notify>(AudioBookPlayer::secondarySerial);
 
@@ -31,10 +30,10 @@ void loop() {
 		return;
 	}
 
-	/* SSD1306.ssd1306_setpos(3, 7); */
+	/* ssd1306_setpos(3, 7); */
 	/* Display::logInt(Input::pressedButton, false); */
 
-	SSD1306.ssd1306_setpos(3, 7);
+	ssd1306_setpos(3, 7);
 	
 	if ( Input::pressedButton > 0 && !needsReset && Input::pressedDuration >= 1000) {
 		if ( Input::pressedButton ==  1 ) {

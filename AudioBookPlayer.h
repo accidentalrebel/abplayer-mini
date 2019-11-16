@@ -19,7 +19,7 @@
 #define TX PB1
 
 #define SSD1306_SCL PB2	
-#define SSD1306_SDA	PB0
+#define SSD1306_SDA PB0
 
 #else
 /// Arduino

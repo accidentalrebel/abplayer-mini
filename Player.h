@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 #include <stdint.h>
+#include <ssd1306xled.h>
+#include <ssd1306xledtx.h>
 #include "AudioBookPlayer.h"
 #include "Display.h"
 

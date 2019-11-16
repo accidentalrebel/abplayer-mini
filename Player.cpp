@@ -49,7 +49,7 @@ static void Player::playCurrentTrack() {
 
   AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 
-  SSD1306.ssd1306_setpos(3, 7);
+  ssd1306_setpos(3, 7);
   Display::log("> Playing ");
   Display::logInt(Player::playIndex);
 
