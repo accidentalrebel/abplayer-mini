@@ -9,7 +9,8 @@
 
 class Player {
  public:
-  static uint8_t playIndex;	
+  static uint8_t playIndex;
+  static uint8_t folderIndex;
   static bool isSwitching;
   static bool isPlaying;
   static bool onPlayFinishedTrigger;

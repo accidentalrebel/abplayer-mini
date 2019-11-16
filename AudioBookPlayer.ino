@@ -17,6 +17,16 @@ void setup() {
 
 	analogReference(DEFAULT);
 	pinMode(A3, INPUT);
+
+	/* delay(2000); */
+	/* ssd1306_setpos(3, 6); */
+	/* Display::log(">"); */
+	/* Display::logInt(0); */
+	/* Display::log(" - "); */
+	/* Display::logInt(AudioBookPlayer::mp3.getTotalTrackCount()); */
+	/* Display::log(" - "); */
+	/* Display::logInt(AudioBookPlayer::mp3.getFolderTrackCount(1)); */
+	/* Display::log("<"); */
 }
 
 void loop() {
