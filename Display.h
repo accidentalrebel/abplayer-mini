@@ -17,6 +17,7 @@ class Display {
   static void logInt(uint16_t val, bool canClear = false);
   static void onUpdateCurrentPlayed();
   static void onUpdatedVolume(uint16_t vol);
+  static void clearLine(uint8_t lineNum);
 };
 
 #endif

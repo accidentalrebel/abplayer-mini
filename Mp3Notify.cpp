@@ -3,6 +3,7 @@
 static void Mp3Notify::OnError(uint16_t errorCode)
 {
   // see DfMp3_Error for code meaning
+  Display::clearLine(6);
   ssd1306_setpos(3, 7);
   Display::log("> Error ");
   Display::logInt(errorCode);

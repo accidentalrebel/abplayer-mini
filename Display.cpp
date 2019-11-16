@@ -52,3 +52,12 @@ void Display::log(char* log, bool canClear = false) {
 void Display::logInt(uint16_t val, bool canClear = false) {
   ssd1306tx_numdec(val);
 }
+
+void Display::clearLine(uint8_t lineNum) {
+  ssd1306_setpos(0, 7);
+  ssd1306_start_data();
+  for (uint16_t i = 0; i < 128; i++) {
+    ssd1306_data_byte(0xFF);
+  }
+  ssd1306_stop();
+}
