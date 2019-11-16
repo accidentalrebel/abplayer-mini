@@ -21,7 +21,9 @@ void Display::sleep() {
   }
 
   isTurnedOn = false;
-  // ssd1306_send_command(0xAE);
+  ssd1306_start_command();
+  ssd1306_data_byte(0xAE);
+  ssd1306_stop();
 }
 
 void Display::wake() {
@@ -30,7 +32,9 @@ void Display::wake() {
   }
 
   isTurnedOn = true;
-  // ssd1306_send_command(0xAF);
+  ssd1306_start_command();
+  ssd1306_data_byte(0xAF);
+  ssd1306_stop();
 }
 
 void Display::setupMessage(bool canClear) {
