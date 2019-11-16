@@ -33,6 +33,23 @@ void Display::wake() {
   // ssd1306_send_command(0xAF);
 }
 
+void Display::setupMessage(bool canClear) {
+  if ( canClear ) {
+    Display::clearLine(7);
+    ssd1306_setpos(5, 7);
+  }
+}
+
+void Display::onUpdateMessage(char* message, bool canClear = true) {
+  setupMessage(canClear);
+  ssd1306tx_string(message);
+}
+
+void Display::onUpdateMessageNum(uint16_t num, bool canClear = true) {
+  setupMessage(canClear);
+  ssd1306tx_numdec(num);
+}
+
 void Display::onUpdateCurrentPlayed() {
   
 }
@@ -54,7 +71,7 @@ void Display::logInt(uint16_t val, bool canClear = false) {
 }
 
 void Display::clearLine(uint8_t lineNum) {
-  ssd1306_setpos(0, 7);
+  ssd1306_setpos(0, lineNum);
   ssd1306_start_data();
   for (uint16_t i = 0; i < 128; i++) {
     ssd1306_data_byte(0xFF);

@@ -8,6 +8,7 @@
 
 class Display {
   static char* convertInt(uint16_t val);
+  static void setupMessage(bool canClear);
  public:
   static bool isTurnedOn;
   static void init();
@@ -15,6 +16,8 @@ class Display {
   static void wake();
   static void log(char* log, bool canClear = false);
   static void logInt(uint16_t val, bool canClear = false);
+  static void onUpdateMessage(char* message, bool canClear = true);
+  static void onUpdateMessageNum(uint16_t num, bool canClear = true);
   static void onUpdateCurrentPlayed();
   static void onUpdatedVolume(uint16_t vol);
   static void clearLine(uint8_t lineNum);

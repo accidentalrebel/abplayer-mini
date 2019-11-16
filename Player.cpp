@@ -49,9 +49,8 @@ static void Player::playCurrentTrack() {
 
   AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 
-  ssd1306_setpos(3, 7);
-  Display::log("> Playing ");
-  Display::logInt(Player::playIndex);
+  Display::onUpdateMessage("> Playing ");
+  Display::onUpdateMessageNum(Player::playIndex, false);
 
   isPlaying = true;
   isSwitching = false;
