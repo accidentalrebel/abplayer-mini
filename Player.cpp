@@ -49,8 +49,8 @@ static void Player::playCurrentTrack() {
 
   AudioBookPlayer::mp3.playFolderTrack(1, Player::playIndex);
 
-  Display::onUpdateMessage("> Playing ");
-  Display::onUpdateMessageNum(Player::playIndex, false);
+  Display::onUpdateMessage("> Playing ", true);
+  Display::onUpdateMessageNum(Player::playIndex);
 
   isPlaying = true;
   isSwitching = false;

@@ -3,16 +3,14 @@
 static void Mp3Notify::OnError(uint16_t errorCode)
 {
   // see DfMp3_Error for code meaning
-  ssd1306_setpos(3, 7);
-  Display::log("> Error ");
-  Display::logInt(errorCode);
+  Display::onUpdateMessage("> Error ", true);
+  Display::onUpdateMessageNum(errorCode);
 }
 
 static void Mp3Notify::OnPlayFinished(uint16_t globalTrack)
 {
-  ssd1306_setpos(3, 7);
-  Display::log("> Finished ");
-  Display::logInt(globalTrack);
+  Display::onUpdateMessage("> Finished ", true);
+  Display::onUpdateMessageNum(globalTrack);
 
   Player::onPlayFinished();
 }
@@ -20,36 +18,36 @@ static void Mp3Notify::OnPlayFinished(uint16_t globalTrack)
 static void Mp3Notify::OnCardOnline(uint16_t code)
 {
   ssd1306_setpos(3, 7);
-  Display::log("> Card online");
+  Display::onUpdateMessage("> Card online");
 }
 
 static void Mp3Notify::OnUsbOnline(uint16_t code)
 {
   ssd1306_setpos(3, 7);
-  Display::log("> USB Disk online");
+  Display::onUpdateMessage("> USB Disk online");
 }
 
 static void Mp3Notify::OnCardInserted(uint16_t code)
 {
   ssd1306_setpos(3, 7);
-  Display::log("> Card inserted");
+  Display::onUpdateMessage("> Card inserted");
 }
 
 static void Mp3Notify::OnUsbInserted(uint16_t code)
 {
   ssd1306_setpos(3, 7);
-  Display::log("> USB Disk inserted");
+  Display::onUpdateMessage("> USB Disk inserted");
 }
 
 static void Mp3Notify::OnCardRemoved(uint16_t code)
 {
   ssd1306_setpos(3, 7);
-  Display::log("> Card removed");
+  Display::onUpdateMessage("> Card removed");
 }
 
 static void Mp3Notify::OnUsbRemoved(uint16_t code)
 {
   ssd1306_setpos(3, 7);
-  Display::log("> USB Disk removed");
+  Display::onUpdateMessage("> USB Disk removed");
 }
 

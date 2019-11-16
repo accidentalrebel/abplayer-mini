@@ -61,11 +61,11 @@ void loop() {
 		else if ( Input::releasedButton == 2 ) {
 			if ( Player::isPlaying ) {
 				Player::pause();
-				Display::log("> Pausing");
+				Display::onUpdateMessage("> Pausing", true);
 			}
 			else {
 				Player::resume();
-				Display::log("> Resuming");
+				Display::onUpdateMessage("> Resuming", true);
 			}
 		}
 		else if ( Input::releasedButton == 3 ) {
