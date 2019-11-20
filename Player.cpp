@@ -39,7 +39,6 @@ static void Player::playNextTrack(bool canSeek = true) {
     playIndex += jumpAmount;
   }
 
-  resetMode();
   playCurrentTrack();
 }
 
@@ -60,7 +59,6 @@ static void Player::playPrevTrack(bool canSeek = true) {
     playIndex -= jumpAmount;
   }
 
-  resetMode();
   playCurrentTrack();
 }
 
@@ -68,7 +66,7 @@ static void Player::playCurrentTrack() {
   isSwitching = true;
 
   AudioBookPlayer::mp3.playGlobalTrack(Player::playIndex);
-  Display::onUpdateCurrentPlayed(Player::playIndex);
+  Display::onUpdateCurrentPlayed(Player::playIndex, AudioBookPlayer::mp3.getTotalTrackCount());
 
   isPlaying = true;
   isSwitching = false;
@@ -78,6 +76,7 @@ static void Player::sleep() {
   if ( isPlaying ) {
     pause();
   }
+  resetMode();
   AudioBookPlayer::mp3.sleep();
 }
 
