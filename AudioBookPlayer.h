@@ -6,6 +6,7 @@
 #include <ssd1306xled.h>
 #include <avr/sleep.h>
 #include <avr/interrupt.h>
+#include <EEPROM.h>
 #include "Input.h"
 #include "Player.h"
 #include "System.h"

@@ -11,8 +11,8 @@ void setup() {
 	AudioBookPlayer::mp3.begin();
 
 	delay(1000);
-
-	Player::playNextTrack();
+	
+	Player::setup();
 	Player::setVolume(15);
 
 	analogReference(DEFAULT);

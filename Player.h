@@ -15,6 +15,7 @@ class Player {
   static bool onPlayFinishedTrigger;
   static bool isSeekMode;
 
+  static void setup();
   static void onPlayFinished();
   static void playNextTrack(bool canSeek = true);
   static void playPrevTrack(bool canSeek = true);

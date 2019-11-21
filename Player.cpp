@@ -24,6 +24,14 @@ static void Player::onPlayFinished() {
   onPlayFinishedTrigger = false;
 }
 
+static void Player::setup() {
+  uint16_t val = 1;
+  EEPROM.get(0, val);
+  playIndex = val;
+
+  playCurrentTrack();
+}
+
 static void Player::playNextTrack(bool canSeek = true) {
   if ( isSwitching ) {
     return;
@@ -77,6 +85,7 @@ static void Player::sleep() {
     pause();
   }
   resetMode();
+  EEPROM.put(0, playIndex);
   AudioBookPlayer::mp3.sleep();
 }
 
